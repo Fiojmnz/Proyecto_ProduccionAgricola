@@ -86,3 +86,4 @@ public class Trabajador {
         this.salario = salario;
     }
 }
+
