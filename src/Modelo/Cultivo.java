@@ -4,6 +4,8 @@
  */
 package Modelo;
 
+import Enum.EstadoCrecimiento;
+import Enum.TipoCultivo;
 import java.sql.Date;
 
 
@@ -11,28 +13,26 @@ import java.sql.Date;
  *
  * @author gipsy
  */
-public class Cultivo implements Cloneable {
-    private int id;
+public class Cultivo {
+   private int id;
     private String Nombre;
-    private String  Tipo;
+    private TipoCultivo tipo;
     private double AreaSembrada;
-    private String EstadoCrecimiento;
+    private EstadoCrecimiento estadoCrecimiento;
     private Date FechaSiembra;
     private Date FechaCosecha;
-    
+
     public Cultivo() {}
 
-    public Cultivo(int id, String Nombre, String Tipo, double AreaSembrada, String EstadoCrecimiento, Date FechaSiembra, Date FechaCosecha) {
+    public Cultivo(int id, String Nombre, TipoCultivo tipo, double AreaSembrada, EstadoCrecimiento estadoCrecimiento, Date FechaSiembra, Date FechaCosecha) {
         this.id = id;
         this.Nombre = Nombre;
-        this.Tipo = Tipo;
+        this.tipo = tipo;
         this.AreaSembrada = AreaSembrada;
-        this.EstadoCrecimiento = EstadoCrecimiento;
+        this.estadoCrecimiento = estadoCrecimiento;
         this.FechaSiembra = FechaSiembra;
         this.FechaCosecha = FechaCosecha;
     }
-
-    
 
     public int getId() {
         return id;
@@ -42,16 +42,16 @@ public class Cultivo implements Cloneable {
         return Nombre;
     }
 
-    public String getTipo() {
-        return Tipo;
+    public TipoCultivo getTipo() {
+        return tipo;
     }
 
     public double getAreaSembrada() {
         return AreaSembrada;
     }
 
-    public String getEstadoCrecimiento() {
-        return EstadoCrecimiento;
+    public EstadoCrecimiento getEstadoCrecimiento() {
+        return estadoCrecimiento;
     }
 
     public Date getFechaSiembra() {
@@ -62,7 +62,6 @@ public class Cultivo implements Cloneable {
         return FechaCosecha;
     }
 
-   
     public void setId(int id) {
         this.id = id;
     }
@@ -71,16 +70,16 @@ public class Cultivo implements Cloneable {
         this.Nombre = Nombre;
     }
 
-    public void setTipo(String Tipo) {
-        this.Tipo = Tipo;
+    public void setTipo(TipoCultivo tipo) {
+        this.tipo = tipo;
     }
 
     public void setAreaSembrada(double AreaSembrada) {
         this.AreaSembrada = AreaSembrada;
     }
 
-    public void setEstadoCrecimiento(String EstadoCrecimiento) {
-        this.EstadoCrecimiento = EstadoCrecimiento;
+    public void setEstadoCrecimiento(EstadoCrecimiento estadoCrecimiento) {
+        this.estadoCrecimiento = estadoCrecimiento;
     }
 
     public void setFechaSiembra(Date FechaSiembra) {
@@ -91,20 +90,6 @@ public class Cultivo implements Cloneable {
         this.FechaCosecha = FechaCosecha;
     }
 
-   
-    @Override 
-    public Cultivo clone() {
-        try {
-            return (Cultivo) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError("No se puede clonar el Cultivo", e);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Cultivo{" + "id=" + id + ", Nombre=" + Nombre + ", Tipo=" + Tipo + ", AreaSembrada=" + AreaSembrada + ", EstadoCrecimiento=" + EstadoCrecimiento + ", FechaSiembra=" + FechaSiembra + ", FechaCosecha=" + FechaCosecha + '}';
-    }
-    
     
 }
+ 
