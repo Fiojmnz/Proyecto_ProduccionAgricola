@@ -3,37 +3,37 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Mapper;
-
 import Modelo.Cultivo;
-import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.sql.Date;
+import Modelo.CultivoDTO;
+
 /**
  *
  * @author gipsy
  */
 public class CultivoMapper {
-    public static Cultivo fromResultSet(ResultSet rs) throws SQLException {
-        return new Cultivo(
-            rs.getInt("id"),
-            rs.getString("Nombre"),
-            rs.getString("Tipo"),
-            rs.getDouble("AreaSembrada"),
-            rs.getString("EstadoCrecimiento"),
-            rs.getDate("FechaSiembra"),
-            rs.getDate("FechaCosecha")
-        );
+        public static Cultivo toEntity(CultivoDTO dto) {
+        if (dto == null) return null;
+        Cultivo c = new Cultivo();
+        c.setId(dto.getId() == null ? 0 : dto.getId());
+        c.setNombre(dto.getNombre());
+        c.setTipo(dto.getTipo());
+        c.setAreaSembrada(dto.getAreaSembrada());
+        c.setEstadoCrecimiento(dto.getEstadoCrecimiento());
+        c.setFechaSiembra(dto.getFechaSiembra());
+        c.setFechaCosecha(dto.getFechaCosecha());
+        return c;
     }
 
-    public static Cultivo c(String l) {
-        String[] p = l.split(";");
-        return new Cultivo(0, p[0], p[1], Double.parseDouble(p[2]), p[3],
-                Date.valueOf(p[4]), p.length>5 && !p[5].isBlank() ? Date.valueOf(p[5]) : null);
-    }
-
-    public static String c(Cultivo c) {
-        return String.join(";", c.getNombre(), c.getTipo(), String.valueOf(c.getAreaSembrada()),
-                c.getEstadoCrecimiento(), c.getFechaSiembra().toString(),
-                c.getFechaCosecha()!=null?c.getFechaCosecha().toString():"");
+    public static CultivoDTO toDTO(Cultivo e) {
+        if (e == null) return null;
+        CultivoDTO dto = new CultivoDTO();
+        dto.setId(e.getId());
+        dto.setNombre(e.getNombre());
+        dto.setTipo(e.getTipo());
+        dto.setAreaSembrada(e.getAreaSembrada());
+        dto.setEstadoCrecimiento(e.getEstadoCrecimiento());
+        dto.setFechaSiembra(e.getFechaSiembra());
+        dto.setFechaCosecha(e.getFechaCosecha());
+        return dto;
     }
 }
