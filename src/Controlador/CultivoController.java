@@ -5,50 +5,41 @@
 package Controlador;
 
 import DAO.CultivoDAO;
-import Modelo.Cultivo;
+import Enum.EstadoCrecimiento;
+import Enum.TipoCultivo;
+import Modelo.CultivoDTO;
+import Servicios.CultivoServicios;
+import java.sql.Date;
 import java.util.List;
+
+
 
 /**
  *
  * @author gipsy
  */
 public class CultivoController {
-    private final CultivoDAO cultivoDAO;
-
-    public CultivoController(CultivoDAO cultivoDAO) {
-        this.cultivoDAO = cultivoDAO;
+    private final CultivoServicios servicios = new CultivoServicios(new CultivoDAO());
+   public CultivoDTO crearCultivo(String Nombre, TipoCultivo tipo, double AreaSembrada, EstadoCrecimiento  estadoCrecimiento, Date FechaSiembra, Date FechaCosecha) {
+        CultivoDTO dto = new CultivoDTO();
+        dto.setNombre(Nombre);
+        dto.setTipo(tipo);
+        dto.setAreaSembrada(AreaSembrada);
+        dto.setEstadoCrecimiento(estadoCrecimiento);
+        dto.setFechaSiembra(FechaSiembra);
+        dto.setFechaCosecha(FechaCosecha);
+        return servicios.crear(dto);
     }
-
-    public boolean crearCultivo(Cultivo cultivo) {
-        if (!validarCultivo(cultivo)) return false;
-        return cultivoDAO.agregar(cultivo);
+  
+    public List<CultivoDTO> listarCultivos(String filtroNombre)
+    { return servicios.listar(filtroNombre);
     }
-
-    public List<Cultivo> obtenerCultivos() {
-        return cultivoDAO.listar();
+    public boolean actualizarCultivo(CultivoDTO dto) 
+    { return servicios.actualizar(dto); 
     }
-
-    public boolean modificarCultivo(Cultivo cultivo) {
-        if (cultivo == null || cultivo.getId() <= 0 || !validarCultivo(cultivo)) return false;
-        return cultivoDAO.actualizar(cultivo);
-    }
-
-    public boolean borrarCultivo(int id) {
-        if (id <= 0) return false;
-        return cultivoDAO.eliminar(id);
-    }
-
-    public List<Cultivo> buscarCultivoPorNombre(String Nombre) {
-        if (Nombre == null || Nombre.isBlank()) return List.of();
-        return cultivoDAO.buscarPorNombre(Nombre);
-    }
-
-    private boolean validarCultivo(Cultivo cultivo) {
-        return cultivo != null &&
-               cultivo.getNombre() != null && !cultivo.getNombre().isBlank() &&
-               cultivo.getTipo() != null && !cultivo.getTipo().isBlank() &&
-               cultivo.getAreaSembrada() > 0 &&
-               cultivo.getEstadoCrecimiento() != null && !cultivo.getEstadoCrecimiento().isBlank() &&
-               cultivo.getFechaSiembra() != null;
+    public boolean eliminarCultivo(int id)
+    { return servicios.eliminar(id);
     }
 }
+ 
+
