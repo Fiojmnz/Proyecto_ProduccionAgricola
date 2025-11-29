@@ -8,8 +8,8 @@ package Excepciones;
  *
  * @author gipsy
  */
-public class ValidacionException extends RuntimeException {
-    public ValidacionException(String mensaje) {
+public class ValidacionExcepcion extends RuntimeException {
+    public ValidacionExcepcion(String mensaje) {
         super("Los datos ingresados no cumplen con las validaciones requeridas");
     }
 }
