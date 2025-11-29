@@ -8,7 +8,7 @@ import DAO.CultivoDAO;
 import Mapper.CultivoMapper;
 import Modelo.Cultivo;
 import Modelo.CultivoDTO;
-import Validaciones.CultivoValidador;
+import Validaciones.CultivoValidacion;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class CultivoServicios {
 
     private final CultivoDAO dao;
-    private final CultivoValidador validator = new CultivoValidador();
+    private final CultivoValidacion validator = new CultivoValidacion();
 
     public CultivoServicios(CultivoDAO dao) 
     {   this.dao = dao; }
