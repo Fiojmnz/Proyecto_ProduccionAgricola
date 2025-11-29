@@ -5,34 +5,48 @@
 package Servicios;
 
 import DAO.UsuarioDAO;
+import Modelo.UsuarioDTO;
 import Modelo.Usuario;
+import Mapper.UsuarioMapper;
+import Validaciones.UsuarioValidacion;
+import Validaciones.EncriptadorContraseña;
+import Excepciones.DuplicadoExcepcion;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
  * @author AsusVivobook
  */
-public class UsuarioService {
+public class UsuarioServicios {
     private final UsuarioDAO dao;
-    private final UsuarioValidator validator = new UsuarioValidator();
+    private final UsuarioValidacion validacion = new UsuarioValidacion();
 
-    public UsuarioService(UsuarioDAO dao) {
+    public UsuarioServicios(UsuarioDAO dao) {
         this.dao = dao;
     }
 
     public UsuarioDTO registrar(UsuarioDTO dto) {
-        validator.validarRegistro(dto);
+        validacion.validarRegistro(dto);
+
         if (dao.existeUsername(dto.getUsername())) {
-            throw new DuplicadoException("El nombre de usuario ya está registrado.");
+            throw new DuplicadoExcepcion("El nombre de usuario ya está registrado");
         }
+
         Usuario u = UsuarioMapper.toEntity(dto);
-        u.setPasswordHash(PasswordHasher.hash(dto.getPassword()));
+        u.setPasswordHash(EncriptadorContraseña.hash(dto.getPassword()));
         u.setActivo(true);
+
         dao.agregar(u);
+
         return UsuarioMapper.toDTO(u);
     }
 
     public List<UsuarioDTO> listar() {
-        return dao.listar().stream().map(UsuarioMapper::toDTO).collect(Collectors.toList());
+        return dao.listar()
+                .stream()
+                .map(UsuarioMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }
