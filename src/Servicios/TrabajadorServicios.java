@@ -8,7 +8,8 @@ import DAO.TrabajadorDAO;
 import Modelo.TrabajadorDTO;
 import Mapper.TrabajadorMapper;
 import Modelo.Trabajador;
-import Validaciones.TrabajadorValidacion;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -16,22 +17,30 @@ import Validaciones.TrabajadorValidacion;
  */
 public class TrabajadorServicios {
     private final TrabajadorDAO dao;
-    private final TrabajadorValidacion validator = new TrabajadorValidacion();
 
     public TrabajadorServicios(TrabajadorDAO dao) {
         this.dao = dao;
     }
 
     public TrabajadorDTO registrar(TrabajadorDTO dto) {
-        validator.validarRegistro(dto);
-
-        // Se puede verificar duplicados con el DAO
-        // if (dao.existeCedula(dto.getCedula())) {
-        //     throw new TrabajadorDuplicadoException("La cédula ya está registrada.");
-        // }
         Trabajador t = TrabajadorMapper.toEntity(dto);
         dao.agregar(t);
         return TrabajadorMapper.toDTO(t);
     }
 
+    public List<TrabajadorDTO> listar(String filtroPuesto) {
+        return dao.listar(filtroPuesto)
+                .stream()
+                .map(TrabajadorMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public boolean actualizar(TrabajadorDTO dto) {
+        Trabajador t = TrabajadorMapper.toEntity(dto);
+        return dao.actualizar(t);
+    }
+
+    public boolean eliminar(String cedula) {
+        return dao.eliminar(cedula);
+    }
 }
