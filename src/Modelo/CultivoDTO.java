@@ -8,13 +8,12 @@ import Enum.EstadoCrecimiento;
 import Enum.TipoCultivo;
 import java.sql.Date;
 
-
 /**
  *
  * @author gipsy
  */
-public class Cultivo {
-   private int id;
+public class CultivoDTO {
+    private Integer id;
     private String Nombre;
     private TipoCultivo tipo;
     private double AreaSembrada;
@@ -22,19 +21,7 @@ public class Cultivo {
     private Date FechaSiembra;
     private Date FechaCosecha;
 
-    public Cultivo() {}
-
-    public Cultivo(int id, String Nombre, TipoCultivo tipo, double AreaSembrada, EstadoCrecimiento estadoCrecimiento, Date FechaSiembra, Date FechaCosecha) {
-        this.id = id;
-        this.Nombre = Nombre;
-        this.tipo = tipo;
-        this.AreaSembrada = AreaSembrada;
-        this.estadoCrecimiento = estadoCrecimiento;
-        this.FechaSiembra = FechaSiembra;
-        this.FechaCosecha = FechaCosecha;
-    }
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -62,7 +49,7 @@ public class Cultivo {
         return FechaCosecha;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -89,7 +76,5 @@ public class Cultivo {
     public void setFechaCosecha(Date FechaCosecha) {
         this.FechaCosecha = FechaCosecha;
     }
-
     
 }
- 
