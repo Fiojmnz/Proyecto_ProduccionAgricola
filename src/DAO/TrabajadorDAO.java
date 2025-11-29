@@ -5,24 +5,28 @@
 package DAO;
 
 import Modelo.Trabajador;
-import com.sun.jdi.connect.spi.Connection;
-import java.sql.SQLException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.ResultSet;
-
 
 /**
  *
  * @author AsusVivobook
  */
 public class TrabajadorDAO {
+    private final Connection conn;
+
+    //Recibe la conexión desde fuera
+    public TrabajadorDAO(Connection conn) {
+        this.conn = conn;
+    }
 
     public boolean agregar(Trabajador t) {
         String sql = "INSERT INTO trabajadores(cedula, nombre, telefono, correo, puesto, horario, salario) VALUES (?,?,?,?,?,?,?)";
-        try (Connection con = ConnectionFactory.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, t.getCedula());
             ps.setString(2, t.getNombre());
             ps.setString(3, t.getTelefono());
@@ -38,25 +42,37 @@ public class TrabajadorDAO {
     }
 
     public List<Trabajador> listar(String filtroPuesto) {
-        String sql = "SELECT * FROM trabajadores WHERE (? IS NULL OR puesto = ?)";
         List<Trabajador> list = new ArrayList<>();
-        try (Connection con = ConnectionFactory.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, filtroPuesto);
-            ps.setString(2, filtroPuesto);
-            try (ResultSet rs = ps.executeQuery()) {
+        String sql;
+
+        if (filtroPuesto == null || filtroPuesto.isEmpty()) {
+            sql = "SELECT * FROM trabajadores";
+            try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     list.add(map(rs));
                 }
+            } catch (SQLException e) {
+                throw new RuntimeException("Error al listar trabajadores", e);
             }
-            return list;
-        } catch (SQLException e) {
-            throw new RuntimeException("Error al listar trabajadores", e);
+        } else {
+            sql = "SELECT * FROM trabajadores WHERE puesto = ?";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, filtroPuesto);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        list.add(map(rs));
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("Error al listar trabajadores", e);
+            }
         }
+        return list;
     }
 
     public boolean actualizar(Trabajador t) {
         String sql = "UPDATE trabajadores SET nombre=?, telefono=?, correo=?, puesto=?, horario=?, salario=? WHERE cedula=?";
-        try (Connection con = ConnectionFactory.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, t.getNombre());
             ps.setString(2, t.getTelefono());
             ps.setString(3, t.getCorreo());
@@ -72,7 +88,7 @@ public class TrabajadorDAO {
 
     public boolean eliminar(String cedula) {
         String sql = "DELETE FROM trabajadores WHERE cedula=?";
-        try (Connection con = ConnectionFactory.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, cedula);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
