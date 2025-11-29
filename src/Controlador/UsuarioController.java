@@ -4,8 +4,11 @@
  */
 package Controlador;
 
+import Modelo.UsuarioDTO;
+import Enum.Rol;
+import Servicios.UsuarioServicios;
 import DAO.UsuarioDAO;
-import Modelo.Rol;
+import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -13,14 +16,18 @@ import java.util.List;
  * @author AsusVivobook
  */
 public class UsuarioController {
-    private final UsuarioService service = new UsuarioService(new UsuarioDAO());
+
+    private final UsuarioServicios service;
+
+    public UsuarioController(Connection conn) {
+        this.service = new UsuarioServicios(new UsuarioDAO(conn));
+    }
 
     public UsuarioDTO registrarUsuario(String username, String password, Rol rol) {
         UsuarioDTO dto = new UsuarioDTO();
         dto.setUsername(username);
         dto.setPassword(password);
         dto.setRol(rol);
-        dto.setActivo(true);
         return service.registrar(dto);
     }
 
