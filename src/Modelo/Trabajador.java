@@ -85,5 +85,10 @@ public class Trabajador {
     public void setSalario(double salario) {
         this.salario = salario;
     }
+
+    @Override
+    public String toString() {
+        return "Trabajador{" + "cedula='" + cedula + '\'' + ", nombre='" + nombre + '\'' + ", telefono='" + telefono + '\'' + ", correo='" + correo + '\'' + ", puesto='" + puesto + '\'' + ", horario='" + horario + '\'' + ", salario=" + salario + '}';
+    }
 }
 
