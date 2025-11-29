@@ -4,16 +4,28 @@
  */
 package Controlador;
 
+import Modelo.AlmacenamientoDTO;
+import Servicios.AlmacenamientoServicios;
+import DAO.AlmacenamientoDAO;
+
+import java.sql.Connection;
+import java.time.LocalDate;
 import java.util.List;
+
 
 /**
  *
  * @author AsusVivobook
  */
 public class AlmacenamientoController {
-    private final AlmacenamientoService service = new AlmacenamientoService(new AlmacenamientoDAO());
+    private final AlmacenamientoServicios service;
 
-    public AlmacenamientoDTO registrarIngreso(String producto, double cantidad, java.time.LocalDate ingreso) {
+    //Recibe la conexión y arma el servicio con el DAO
+    public AlmacenamientoController(Connection conn) {
+        this.service = new AlmacenamientoServicios(new AlmacenamientoDAO(conn));
+    }
+
+    public AlmacenamientoDTO registrarIngreso(String producto, double cantidad, LocalDate ingreso) {
         AlmacenamientoDTO dto = new AlmacenamientoDTO();
         dto.setProducto(producto);
         dto.setCantidad(cantidad);
@@ -25,3 +37,4 @@ public class AlmacenamientoController {
         return service.listar();
     }
 }
+
