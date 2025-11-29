@@ -4,6 +4,8 @@
  */
 package Modelo;
 
+import Enum.Rol;
+
 /**
  *
  * @author AsusVivobook
@@ -11,7 +13,7 @@ package Modelo;
 public class Usuario {
     private Long id;
     private String username;
-    private String passwordHash;
+    private String encriptadorContraseña;
     private Rol rol;
     private boolean activo;
 
@@ -24,7 +26,7 @@ public class Usuario {
     }
 
     public String getPasswordHash() {
-        return passwordHash;
+        return encriptadorContraseña;
     }
 
     public Rol getRol() {
@@ -44,7 +46,7 @@ public class Usuario {
     }
 
     public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+        this.encriptadorContraseña = encriptadorContraseña;
     }
 
     public void setRol(Rol rol) {
