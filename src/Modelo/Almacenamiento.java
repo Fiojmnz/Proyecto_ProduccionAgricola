@@ -11,11 +11,23 @@ import java.time.LocalDate;
  * @author AsusVivobook
  */
 public class Almacenamiento {
-    private Integer id;
+    private int id;
     private String producto;
     private double cantidad;
     private LocalDate fechaIngreso;
-    private LocalDate fechaEgreso; // es opcional
+    private LocalDate fechaEgreso;
+
+    public Almacenamiento() {
+
+    }
+
+    public Almacenamiento(int id, String producto, double cantidad, LocalDate fechaIngreso, LocalDate fechaEgreso) {
+        this.id = id;
+        this.producto = producto;
+        this.cantidad = cantidad;
+        this.fechaIngreso = fechaIngreso;
+        this.fechaEgreso = fechaEgreso;
+    }
 
     public Integer getId() {
         return id;
@@ -37,7 +49,7 @@ public class Almacenamiento {
         return fechaEgreso;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -55,5 +67,10 @@ public class Almacenamiento {
 
     public void setFechaEgreso(LocalDate fechaEgreso) {
         this.fechaEgreso = fechaEgreso;
+    }
+
+    @Override
+    public String toString() {
+        return "Almacenamiento{" + "id=" + id + ", producto='" + producto + '\'' + ", cantidad=" + cantidad + ", fechaIngreso=" + fechaIngreso + ", fechaEgreso=" + fechaEgreso + '}';
     }
 }
