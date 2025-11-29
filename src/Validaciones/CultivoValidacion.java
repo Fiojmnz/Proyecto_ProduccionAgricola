@@ -11,7 +11,7 @@ import Modelo.CultivoDTO;
  *
  * @author gipsy
  */
-public class CultivoValidador {
+public class CultivoValidacion {
      public void validarCrear(CultivoDTO dto) {
         if (dto == null) throw new ValidacionExcepcion("Datos de cultivo vacíos");
         if (dto.getNombre() == null || dto.getNombre().isBlank())
