@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class ConnectionFactory {
     private static final String URL = "jdbc:mariadb://localhost:3306/Proyecto_ProduccionAgricola";
     private static final String USER = "root";
-    private static final String PASS = "Root123";
+    private static final String PASS = "Root123@";
 
     private ConnectionFactory() {}
 
