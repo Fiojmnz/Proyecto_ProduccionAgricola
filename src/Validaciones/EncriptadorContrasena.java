@@ -5,12 +5,13 @@
 package Validaciones;
 
 import java.security.MessageDigest;
+import java.util.Base64;
 
 /**
  *
  * @author AsusVivobook
  */
-public class EncriptadorContraseña {
+public class EncriptadorContrasena {
     public static String hash(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -22,6 +23,21 @@ public class EncriptadorContraseña {
             return sb.toString();
         } catch (Exception e) {
             throw new RuntimeException("Error al encriptar la contraseña", e);
+        }
+    }
+    public static boolean verifica (String password, String stored) {
+        try {
+            String[] parts = stored.split(":");
+            byte[] salt = Base64.getDecoder().decode(parts[0]);
+            byte[] expected = Base64.getDecoder().decode(parts[1]);
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(salt);
+            byte[] hashed = md.digest(password.getBytes());
+            int diff = 0;
+            for (int i = 0; i < hashed.length; i++) diff |= hashed[i] ^ expected[i];
+            return diff == 0;
+        } catch (Exception e) {
+            return false;
         }
     }
 }
