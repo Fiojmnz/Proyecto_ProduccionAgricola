@@ -9,7 +9,7 @@ import Modelo.UsuarioDTO;
 import Modelo.Usuario;
 import Mapper.UsuarioMapper;
 import Validaciones.UsuarioValidacion;
-import Validaciones.EncriptadorContraseña;
+import Validaciones.EncriptadorContrasena;
 import Excepciones.DuplicadoExcepcion;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class UsuarioServicios {
         }
 
         Usuario u = UsuarioMapper.toEntity(dto);
-        u.setPasswordHash(EncriptadorContraseña.hash(dto.getPassword()));
+        u.setPasswordHash(EncriptadorContrasena.hash(dto.getPassword()));
         u.setActivo(true);
 
         dao.agregar(u);
