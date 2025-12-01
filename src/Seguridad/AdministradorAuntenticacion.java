@@ -7,7 +7,7 @@ package Seguridad;
 import DAO.UsuarioDAO;
 import Enum.Rol;
 import Modelo.Usuario;
-import Validaciones.EncriptadorContraseña;
+import Validaciones.EncriptadorContrasena;
 
 /**
  *
@@ -21,7 +21,7 @@ public class AdministradorAuntenticacion {
 
     public boolean login(String username, String password) {
         Usuario u = usuarioDAO.buscarPorUsername(username);
-        if (u != null && u.isActivo() && EncriptadorContraseña.verifica (password, u.getPasswordHash())) {
+        if (u != null && u.isActivo() && EncriptadorContrasena.verifica (password, u.getPasswordHash())) {
             actual = u;
             return true;
         }
