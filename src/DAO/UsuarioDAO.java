@@ -34,6 +34,25 @@ public class UsuarioDAO {
         }
         return false;
     }
+    public Usuario buscarPorUsername(String username) {
+    try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM usuarios WHERE username")) {
+        ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            Usuario u = new Usuario();
+            u.setId(rs.getLong("id"));
+            u.setUsername(rs.getString("username"));
+            u.setPasswordHash(rs.getString("password"));
+            u.setRol(Rol.valueOf(rs.getString("rol")));
+            u.setActivo(rs.getBoolean("activo"));
+            return u;
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException("Error al buscar usuario por username", e);
+    }
+    return null;
+}
+
 
     public void agregar(Usuario u) {
         try (PreparedStatement ps = conn.prepareStatement(
@@ -65,4 +84,5 @@ public class UsuarioDAO {
         }
         return lista;
     }
+    
 }
