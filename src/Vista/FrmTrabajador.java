@@ -8,12 +8,12 @@ package Vista;
  *
  * @author AsusVivobook
  */
-public class FrmTrabajadores extends javax.swing.JFrame {
+public class FrmTrabajador extends javax.swing.JFrame {
 
     /**
      * Creates new form FrmTrabajadores
      */
-    public FrmTrabajadores() {
+    public FrmTrabajador() {
         initComponents();
     }
 
@@ -59,20 +59,21 @@ public class FrmTrabajadores extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmTrabajadores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmTrabajador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmTrabajadores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmTrabajador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmTrabajadores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmTrabajador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmTrabajadores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmTrabajador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmTrabajadores().setVisible(true);
+                new FrmTrabajador().setVisible(true);
             }
         });
     }

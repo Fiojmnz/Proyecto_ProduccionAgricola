@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  *
- * @author AsusVivobook
+ * @author gipsy
  */
 public class AlmacenamientoDAO {
     private final Connection conn;
@@ -21,17 +21,13 @@ public class AlmacenamientoDAO {
     }
 
     public boolean agregar(Almacenamiento a) {
-        String sql = "INSERT INTO almacenamiento(producto, cantidad, fecha_ingreso, fecha_egreso) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO almacenamiento(producto, cantidad, fecha_ingreso) VALUES (?,?,?)";
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, a.getProducto());
-            ps.setDouble(2, a.getCantidad());
+            ps.setInt(2, a.getCantidad());
             ps.setDate(3, Date.valueOf(a.getFechaIngreso()));
-            if (a.getFechaEgreso() == null) {
-                ps.setNull(4, Types.DATE);
-            } else {
-                ps.setDate(4, Date.valueOf(a.getFechaEgreso()));
-            }
             ps.executeUpdate();
+
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
                     a.setId(rs.getInt(1));
@@ -57,17 +53,12 @@ public class AlmacenamientoDAO {
     }
 
     public boolean actualizar(Almacenamiento a) {
-        String sql = "UPDATE almacenamiento SET producto=?, cantidad=?, fecha_ingreso=?, fecha_egreso=? WHERE id=?";
+        String sql = "UPDATE almacenamiento SET producto=?, cantidad=?, fecha_ingreso=? WHERE id=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, a.getProducto());
-            ps.setDouble(2, a.getCantidad());
+            ps.setInt(2, a.getCantidad());
             ps.setDate(3, Date.valueOf(a.getFechaIngreso()));
-            if (a.getFechaEgreso() == null) {
-                ps.setNull(4, Types.DATE);
-            } else {
-                ps.setDate(4, Date.valueOf(a.getFechaEgreso()));
-            }
-            ps.setInt(5, a.getId());
+            ps.setInt(4, a.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new RuntimeException("Error al actualizar almacenamiento", e);
@@ -88,10 +79,8 @@ public class AlmacenamientoDAO {
         Almacenamiento a = new Almacenamiento();
         a.setId(rs.getInt("id"));
         a.setProducto(rs.getString("producto"));
-        a.setCantidad(rs.getDouble("cantidad"));
+        a.setCantidad(rs.getInt("cantidad"));
         a.setFechaIngreso(rs.getDate("fecha_ingreso").toLocalDate());
-        Date fe = rs.getDate("fecha_egreso");
-        a.setFechaEgreso(fe == null ? null : fe.toLocalDate());
         return a;
     }
 }

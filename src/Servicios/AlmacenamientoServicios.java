@@ -9,6 +9,9 @@ import Modelo.AlmacenamientoDTO;
 import Mapper.AlmacenamientoMapper;
 import Modelo.Almacenamiento;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.sql.Connection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,8 +22,8 @@ import java.util.stream.Collectors;
 public class AlmacenamientoServicios {
     private final AlmacenamientoDAO dao;
 
-    public AlmacenamientoServicios(AlmacenamientoDAO dao) {
-        this.dao = dao;
+    public AlmacenamientoServicios(Connection conn) {
+        this.dao = new AlmacenamientoDAO(conn);
     }
 
     public AlmacenamientoDTO registrar(AlmacenamientoDTO dto) {
@@ -38,11 +41,40 @@ public class AlmacenamientoServicios {
 
     public boolean actualizar(AlmacenamientoDTO dto) {
         Almacenamiento a = AlmacenamientoMapper.toEntity(dto);
-        a.setId(dto.getId());
         return dao.actualizar(a);
     }
 
     public boolean eliminar(int id) {
         return dao.eliminar(id);
+    }
+
+    public void generarReportePDF(String rutaArchivo) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(rutaArchivo))) {
+            pw.println("Reporte de Almacenamiento (PDF simulado)");
+            for (AlmacenamientoDTO dto : listar()) {
+                pw.println(dto.getId() + " - " + dto.getProducto() + " - "
+                        + dto.getCantidad() + " - "
+                        + dto.getFechaIngreso());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al generar reporte PDF", e);
+        }
+    }
+
+    public void generarReporteXML(String rutaArchivo) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(rutaArchivo))) {
+            pw.println("<almacenamientos>");
+            for (AlmacenamientoDTO dto : listar()) {
+                pw.println("  <almacenamiento>");
+                pw.println("    <id>" + dto.getId() + "</id>");
+                pw.println("    <producto>" + dto.getProducto() + "</producto>");
+                pw.println("    <cantidad>" + dto.getCantidad() + "</cantidad>");
+                pw.println("    <fechaIngreso>" + dto.getFechaIngreso() + "</fechaIngreso>");
+                pw.println("  </almacenamiento>");
+            }
+            pw.println("</almacenamientos>");
+        } catch (Exception e) {
+            throw new RuntimeException("Error al generar reporte XML", e);
+        }
     }
 }
