@@ -4,15 +4,12 @@
  */
 package Controlador;
 
-import DAO.AlmacenamientoDAO;
 import Modelo.AlmacenamientoDTO;
 import Servicios.AlmacenamientoServicios;
+import Hilos.AlertasAlmacenamientoHilos;
 
 import java.sql.Connection;
-import java.time.LocalDate;
 import java.util.List;
-
-
 
 /**
  *
@@ -22,14 +19,14 @@ public class AlmacenamientoController {
     private final AlmacenamientoServicios service;
 
     public AlmacenamientoController(Connection conn) {
-        this.service = new AlmacenamientoServicios(new AlmacenamientoDAO(conn));
+        this.service = new AlmacenamientoServicios(conn);
     }
 
-    public AlmacenamientoDTO registrarIngreso(String producto, double cantidad, LocalDate ingreso) {
+    public AlmacenamientoDTO registrarAlmacenamiento(String producto, int cantidad, java.time.LocalDate fechaIngreso) {
         AlmacenamientoDTO dto = new AlmacenamientoDTO();
         dto.setProducto(producto);
         dto.setCantidad(cantidad);
-        dto.setFechaIngreso(ingreso);
+        dto.setFechaIngreso(fechaIngreso);
         return service.registrar(dto);
     }
 
@@ -43,5 +40,18 @@ public class AlmacenamientoController {
 
     public boolean eliminarAlmacenamiento(int id) {
         return service.eliminar(id);
+    }
+
+    public void generarReportePDF(String rutaArchivo) {
+        service.generarReportePDF(rutaArchivo);
+    }
+
+    public void generarReporteXML(String rutaArchivo) {
+        service.generarReporteXML(rutaArchivo);
+    }
+
+    public void iniciarAlertas(int umbralDias) {
+        AlertasAlmacenamientoHilos hilo = new AlertasAlmacenamientoHilos(this, umbralDias);
+        hilo.start();
     }
 }
