@@ -4,13 +4,14 @@
  */
 package Controlador;
 
+import DAO.AlmacenamientoDAO;
 import Modelo.AlmacenamientoDTO;
 import Servicios.AlmacenamientoServicios;
-import DAO.AlmacenamientoDAO;
 
 import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.List;
+
 
 
 /**
@@ -20,7 +21,6 @@ import java.util.List;
 public class AlmacenamientoController {
     private final AlmacenamientoServicios service;
 
-    //Recibe la conexión y arma el servicio con el DAO
     public AlmacenamientoController(Connection conn) {
         this.service = new AlmacenamientoServicios(new AlmacenamientoDAO(conn));
     }
@@ -36,5 +36,12 @@ public class AlmacenamientoController {
     public List<AlmacenamientoDTO> listarInventario() {
         return service.listar();
     }
-}
 
+    public boolean actualizarAlmacenamiento(AlmacenamientoDTO dto) {
+        return service.actualizar(dto);
+    }
+
+    public boolean eliminarAlmacenamiento(int id) {
+        return service.eliminar(id);
+    }
+}
