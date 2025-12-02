@@ -32,13 +32,16 @@ public class CultivoController {
     }
   
     public List<CultivoDTO> listarCultivos(String filtroNombre)
-    { return servicios.listar(filtroNombre);
+    {
+        return servicios.listar(filtroNombre);
     }
     public boolean actualizarCultivo(CultivoDTO dto) 
-    { return servicios.actualizar(dto); 
+    { 
+        return servicios.actualizar(dto); 
     }
     public boolean eliminarCultivo(int id)
-    { return servicios.eliminar(id);
+    { 
+        return servicios.eliminar(id);
     }
 }
  
