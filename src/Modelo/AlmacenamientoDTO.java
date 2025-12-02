@@ -11,10 +11,15 @@ import java.time.LocalDate;
  * @author AsusVivobook
  */
 public class AlmacenamientoDTO {
+    private int id;
     private String producto;
     private double cantidad;
     private LocalDate fechaIngreso;
     private LocalDate fechaEgreso;
+
+    public int getId() {
+        return id;
+    }
 
     public String getProducto() {
         return producto;
@@ -32,6 +37,10 @@ public class AlmacenamientoDTO {
         return fechaEgreso;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setProducto(String producto) {
         this.producto = producto;
     }
@@ -47,4 +56,5 @@ public class AlmacenamientoDTO {
     public void setFechaEgreso(LocalDate fechaEgreso) {
         this.fechaEgreso = fechaEgreso;
     }
+
 }
