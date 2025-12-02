@@ -4,8 +4,8 @@
  */
 package Mapper;
 
-import Modelo.Produccion;
 import Modelo.ProduccionDTO;
+import Modelo.Produccion;
 
 /**
  *
@@ -15,7 +15,6 @@ public class ProduccionMapper {
     public static Produccion toEntity(ProduccionDTO dto) {
         Produccion p = new Produccion();
         p.setId(dto.getId());
-        p.setCultivoId(dto.getCultivoId());
         p.setFecha(dto.getFecha());
         p.setCantidadRecolectada(dto.getCantidadRecolectada());
         p.setCalidad(dto.getCalidad());
@@ -23,16 +22,14 @@ public class ProduccionMapper {
         return p;
     }
 
-    public static ProduccionDTO toDTO(Produccion e) {
+    public static ProduccionDTO toDTO(Produccion p) {
         ProduccionDTO dto = new ProduccionDTO();
-        dto.setId(e.getId());
-        dto.setCultivoId(e.getCultivoId());
-        dto.setFecha(e.getFecha());
-        dto.setCantidadRecolectada(e.getCantidadRecolectada());
-        dto.setCalidad(e.getCalidad());
-        dto.setDestino(e.getDestino());
-        dto.setProductividad(null);
+        dto.setId(p.getId());
+        dto.setFecha(p.getFecha());
+        dto.setCantidadRecolectada(p.getCantidadRecolectada());
+        dto.setCalidad(p.getCalidad());
+        dto.setDestino(p.getDestino());
+        dto.setProductividad(p.getProductividad());
         return dto;
     }
-} 
-
+}
