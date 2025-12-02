@@ -4,76 +4,66 @@
  */
 package Modelo;
 
-import Enum.Destino;
-import java.sql.Date;
+import java.time.LocalDate;
+
 
 /**
  *
  * @author gipsy
  */
 public class ProduccionDTO {
-    private Integer id;
-    private int CultivoId;
-    private Date Fecha;
-    private double CantidadRecolectada;
+    private int id;
+    private LocalDate fecha;
+    private double cantidadRecolectada;
     private String calidad;
-    private Destino destino;
-    private Double productividad;
-    public Integer getId() {
+    private double productividad; // calculado en servicio
+    private String destino;
+
+    public int getId() {
         return id;
     }
 
-    public int getCultivoId() {
-        return CultivoId;
-    }
-
-    public Date getFecha() {
-        return Fecha;
+    public LocalDate getFecha() {
+        return fecha;
     }
 
     public double getCantidadRecolectada() {
-        return CantidadRecolectada;
+        return cantidadRecolectada;
     }
 
     public String getCalidad() {
         return calidad;
     }
 
-    public Destino getDestino() {
-        return destino;
-    }
-
-    public Double getProductividad() {
+    public double getProductividad() {
         return productividad;
     }
 
-    public void setId(Integer id) {
+    public String getDestino() {
+        return destino;
+    }
+
+    public void setId(int id) {
         this.id = id;
     }
 
-    public void setCultivoId(int CultivoId) {
-        this.CultivoId = CultivoId;
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
     }
 
-    public void setFecha(Date Fecha) {
-        this.Fecha = Fecha;
-    }
-
-    public void setCantidadRecolectada(double CantidadRecolectada) {
-        this.CantidadRecolectada = CantidadRecolectada;
+    public void setCantidadRecolectada(double cantidadRecolectada) {
+        this.cantidadRecolectada = cantidadRecolectada;
     }
 
     public void setCalidad(String calidad) {
         this.calidad = calidad;
     }
 
-    public void setDestino(Destino destino) {
-        this.destino = destino;
-    }
-
-    public void setProductividad(Double productividad) {
+    public void setProductividad(double productividad) {
         this.productividad = productividad;
     }
-    
-    
+
+    public void setDestino(String destino) {
+        this.destino = destino;
+    }
 }
