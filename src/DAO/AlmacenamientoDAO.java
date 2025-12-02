@@ -24,7 +24,7 @@ public class AlmacenamientoDAO {
         String sql = "INSERT INTO almacenamiento(producto, cantidad, fecha_ingreso) VALUES (?,?,?)";
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, a.getProducto());
-            ps.setInt(2, a.getCantidad());
+            ps.setDouble(2, a.getCantidad());
             ps.setDate(3, Date.valueOf(a.getFechaIngreso()));
             ps.executeUpdate();
 
@@ -56,7 +56,7 @@ public class AlmacenamientoDAO {
         String sql = "UPDATE almacenamiento SET producto=?, cantidad=?, fecha_ingreso=? WHERE id=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, a.getProducto());
-            ps.setInt(2, a.getCantidad());
+            ps.setDouble(2,  a.getCantidad());
             ps.setDate(3, Date.valueOf(a.getFechaIngreso()));
             ps.setInt(4, a.getId());
             return ps.executeUpdate() > 0;
