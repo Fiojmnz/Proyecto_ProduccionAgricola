@@ -5,10 +5,12 @@
 package Servicios;
 
 import DAO.ProduccionDAO;
+import Modelo.ProduccionDTO;
 import Mapper.ProduccionMapper;
 import Modelo.Produccion;
-import Modelo.ProduccionDTO;
-import java.sql.Date;
+
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,30 +21,75 @@ import java.util.stream.Collectors;
 public class ProduccionServicios {
     private final ProduccionDAO dao;
 
-    public ProduccionServicios (ProduccionDAO dao) { this.dao = dao; }
+    public ProduccionServicios(ProduccionDAO dao) {
+        this.dao = dao;
+    }
 
     public ProduccionDTO registrar(ProduccionDTO dto) {
-    Produccion p = ProduccionMapper.toEntity(dto);
-    dao.agregar(p);
-    ProduccionDTO out = ProduccionMapper.toDTO(p);
-    out.setProductividad(calcularProductividad(out.getCantidadRecolectada(), out.getCalidad()));
-    return out;
-}
+        Produccion p = ProduccionMapper.toEntity(dto);
 
+        // Ejemplo de cálculo de productividad 
+        double productividad = p.getCantidadRecolectada() * 0.8; 
+        p.setProductividad(productividad);
 
-    public List<ProduccionDTO> listarPorRango(java.time.LocalDate desde, java.time.LocalDate hasta) {
-        return dao.listarPorFecha(Date.valueOf(desde), Date.valueOf(hasta)).stream()
-                .map(e -> {
-                    ProduccionDTO d = ProduccionMapper.toDTO(e);
-                    d.setProductividad(calcularProductividad(d.getCantidadRecolectada(), d.getCalidad()));
-                    return d;
-                }).collect(Collectors.toList());
+        dao.agregar(p);
+        return ProduccionMapper.toDTO(p);
     }
 
-    private double calcularProductividad(double cantidad, String calidad) {
-        double factor = switch (calidad) { 
-            case "ALTA" -> 1.0; case "MEDIA" -> 0.8; default -> 0.6; };
-        return cantidad * factor;
+    public List<ProduccionDTO> listar() {
+        return dao.listar()
+                .stream()
+                .map(ProduccionMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProduccionDTO> listarPorFecha(java.time.LocalDate inicio, java.time.LocalDate fin) {
+        return dao.listarPorFecha(inicio, fin)
+                .stream()
+                .map(ProduccionMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public boolean actualizar(ProduccionDTO dto) {
+        Produccion p = ProduccionMapper.toEntity(dto);
+        return dao.actualizar(p);
+    }
+
+    public boolean eliminar(int id) {
+        return dao.eliminar(id);
+    }
+
+    public void generarReportePDF(String rutaArchivo) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(rutaArchivo))) {
+            pw.println("Reporte de Producción (PDF simulado)");
+            for (ProduccionDTO dto : listar()) {
+                pw.println(dto.getId() + " - " + dto.getFecha() + " - "
+                        + dto.getCantidadRecolectada() + " - "
+                        + dto.getCalidad() + " - "
+                        + dto.getDestino() + " - Prod: "
+                        + dto.getProductividad());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al generar reporte PDF", e);
+        }
+    }
+
+    public void generarReporteXML(String rutaArchivo) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(rutaArchivo))) {
+            pw.println("<producciones>");
+            for (ProduccionDTO dto : listar()) {
+                pw.println("  <produccion>");
+                pw.println("    <id>" + dto.getId() + "</id>");
+                pw.println("    <fecha>" + dto.getFecha() + "</fecha>");
+                pw.println("    <cantidad>" + dto.getCantidadRecolectada() + "</cantidad>");
+                pw.println("    <calidad>" + dto.getCalidad() + "</calidad>");
+                pw.println("    <destino>" + dto.getDestino() + "</destino>");
+                pw.println("    <productividad>" + dto.getProductividad() + "</productividad>");
+                pw.println("  </produccion>");
+            }
+            pw.println("</producciones>");
+        } catch (Exception e) {
+            throw new RuntimeException("Error al generar reporte XML", e);
+        }
     }
 }
-
