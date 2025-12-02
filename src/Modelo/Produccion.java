@@ -4,29 +4,29 @@
  */
 package Modelo;
 
-import Enum.Destino;
-import java.sql.Date;
+import java.time.LocalDate;
+
 
 /**
  *
  * @author gipsy
  */
 public class Produccion {
-    private Integer id;
-    private int CultivoId;
-    private Date Fecha;
-    private double CantidadRecolectada;
-    private String calidad;
-    private Destino destino;
-    
-   public Produccion(){
-   }
+    private int id;                     
+    private LocalDate fecha;            
+    private double cantidadRecolectada;
+    private String calidad;             
+    private double productividad;   // calculado, no se guarda en DB
 
-    public Produccion(int id, int CultivoId, Date Fecha, double CantidadRecolectada, String calidad, Destino destino) {
-        this.id = id;
-        this.CultivoId = CultivoId;
-        this.Fecha = Fecha;
-        this.CantidadRecolectada = CantidadRecolectada;
+    private String destino;            
+
+    public Produccion() {
+        
+    }
+
+    public Produccion(LocalDate fecha, double cantidadRecolectada, String calidad, String destino) {
+        this.fecha = fecha;
+        this.cantidadRecolectada = cantidadRecolectada;
         this.calidad = calidad;
         this.destino = destino;
     }
@@ -35,23 +35,23 @@ public class Produccion {
         return id;
     }
 
-    public int getCultivoId() {
-        return CultivoId;
-    }
-
-    public Date getFecha() {
-        return Fecha;
+    public LocalDate getFecha() {
+        return fecha;
     }
 
     public double getCantidadRecolectada() {
-        return CantidadRecolectada;
+        return cantidadRecolectada;
     }
 
     public String getCalidad() {
         return calidad;
     }
 
-    public Destino getDestino() {
+    public double getProductividad() {
+        return productividad;
+    }
+
+    public String getDestino() {
         return destino;
     }
 
@@ -59,23 +59,35 @@ public class Produccion {
         this.id = id;
     }
 
-    public void setCultivoId(int CultivoId) {
-        this.CultivoId = CultivoId;
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
     }
 
-    public void setFecha(Date Fecha) {
-        this.Fecha = Fecha;
-    }
-
-    public void setCantidadRecolectada(double CantidadRecolectada) {
-        this.CantidadRecolectada = CantidadRecolectada;
+    public void setCantidadRecolectada(double cantidadRecolectada) {
+        this.cantidadRecolectada = cantidadRecolectada;
     }
 
     public void setCalidad(String calidad) {
         this.calidad = calidad;
     }
 
-    public void setDestino(Destino destino) {
+    public void setProductividad(double productividad) {
+        this.productividad = productividad;
+    }
+
+    public void setDestino(String destino) {
         this.destino = destino;
+    }
+
+    @Override
+    public String toString() {
+        return "Produccion{"
+                + "id=" + id
+                + ", fecha=" + fecha
+                + ", cantidadRecolectada=" + cantidadRecolectada
+                + ", calidad='" + calidad + '\''
+                + ", productividad=" + productividad
+                + ", destino='" + destino + '\''
+                + '}';
     }
 }
