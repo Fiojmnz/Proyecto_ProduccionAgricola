@@ -84,7 +84,7 @@ public class Produccion {
         return "Produccion{"
                 + "id=" + id
                 + ", fecha=" + fecha
-                + ", cantidadRecolectada=" + cantidadRecolectada
+                + ", CantidadRecolectada=" + cantidadRecolectada
                 + ", calidad='" + calidad + '\''
                 + ", productividad=" + productividad
                 + ", destino='" + destino + '\''
