@@ -35,4 +35,14 @@ public class AlmacenamientoServicios {
                 .map(AlmacenamientoMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+    public boolean actualizar(AlmacenamientoDTO dto) {
+        Almacenamiento a = AlmacenamientoMapper.toEntity(dto);
+        a.setId(dto.getId());
+        return dao.actualizar(a);
+    }
+
+    public boolean eliminar(int id) {
+        return dao.eliminar(id);
+    }
 }
