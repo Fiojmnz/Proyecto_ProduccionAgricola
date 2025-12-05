@@ -10,6 +10,6 @@ package Excepciones;
  */
 public class ValidacionExcepcion extends RuntimeException {
     public ValidacionExcepcion(String mensaje) {
-        super("Los datos ingresados no cumplen con las validaciones requeridas");
+        super(mensaje);
     }
 }
