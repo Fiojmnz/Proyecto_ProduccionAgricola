@@ -4,19 +4,31 @@
  */
 package Vista;
 
+import Enum.Rol;
+
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author AsusVivobook
  */
 public class FrmInicio extends javax.swing.JFrame {
+         
+    private String username;
+    private Rol rol;
 
-    /**
-     * Creates new form FrmInicio
-     */
-    public FrmInicio() {
+    public FrmInicio(String username, Rol rol) {
+        this.username = username;
+        this.rol = rol;
         initComponents();
-    }
+        this.setLocationRelativeTo(null);
 
+    jLabel1.setText("Usuario: " + username);
+
+    if (rol != Rol.ADMINISTRADOR) {
+        btnUsuario.setEnabled(false);
+    }
+} 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,21 +38,214 @@ public class FrmInicio extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        btnCerrarSeccion = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        btnTrabajador = new javax.swing.JButton();
+        btnProduccion = new javax.swing.JButton();
+        btnAlmacenamiento = new javax.swing.JButton();
+        btnCultivo = new javax.swing.JButton();
+        btnUsuario = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+        jPanel1.setBackground(new java.awt.Color(255, 0, 204));
+
+        jPanel2.setBackground(new java.awt.Color(102, 255, 102));
+
+        jLabel1.setText("Usuario");
+        jPanel2.add(jLabel1);
+
+        btnCerrarSeccion.setText("CerrarSeccion");
+        btnCerrarSeccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSeccionActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnCerrarSeccion);
+
+        jPanel3.setBackground(new java.awt.Color(102, 255, 0));
+
+        btnTrabajador.setBackground(new java.awt.Color(0, 255, 102));
+        btnTrabajador.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        btnTrabajador.setText("Trabajadores");
+        btnTrabajador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTrabajadorActionPerformed(evt);
+            }
+        });
+
+        btnProduccion.setBackground(new java.awt.Color(153, 255, 0));
+        btnProduccion.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        btnProduccion.setText("Produccion");
+        btnProduccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProduccionActionPerformed(evt);
+            }
+        });
+
+        btnAlmacenamiento.setBackground(new java.awt.Color(51, 255, 102));
+        btnAlmacenamiento.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        btnAlmacenamiento.setText("Almacenamiento");
+        btnAlmacenamiento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlmacenamientoActionPerformed(evt);
+            }
+        });
+
+        btnCultivo.setBackground(new java.awt.Color(102, 255, 51));
+        btnCultivo.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        btnCultivo.setText("Cultivo");
+        btnCultivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCultivoActionPerformed(evt);
+            }
+        });
+
+        btnUsuario.setBackground(new java.awt.Color(0, 0, 204));
+        btnUsuario.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        btnUsuario.setText("Usuario");
+        btnUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUsuarioActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnTrabajador)
+                .addGap(18, 18, 18)
+                .addComponent(btnProduccion)
+                .addGap(18, 18, 18)
+                .addComponent(btnAlmacenamiento)
+                .addGap(18, 18, 18)
+                .addComponent(btnCultivo)
+                .addGap(18, 18, 18)
+                .addComponent(btnUsuario)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnTrabajador)
+                    .addComponent(btnProduccion)
+                    .addComponent(btnAlmacenamiento)
+                    .addComponent(btnCultivo)
+                    .addComponent(btnUsuario))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 15, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/licq.png"))); // NOI18N
+        jLabel2.setMaximumSize(new java.awt.Dimension(1055, 1024));
+        jLabel2.setMinimumSize(new java.awt.Dimension(1055, 1024));
+
+        jLabel3.setText("Sistema De Produccion Agricola");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(91, 91, 91)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37))))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(69, 69, 69))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCerrarSeccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSeccionActionPerformed
+        
+        int op = JOptionPane.showConfirmDialog(
+                this,
+                "¿Desea cerrar sesión?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (op == JOptionPane.YES_OPTION) {
+            new FrmLogin().setVisible(true);
+            this.dispose();
+        }
+    
+    }//GEN-LAST:event_btnCerrarSeccionActionPerformed
+
+    private void btnTrabajadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrabajadorActionPerformed
+     
+    }//GEN-LAST:event_btnTrabajadorActionPerformed
+
+    private void btnProduccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProduccionActionPerformed
+       
+
+    }//GEN-LAST:event_btnProduccionActionPerformed
+
+    private void btnAlmacenamientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlmacenamientoActionPerformed
+       
+    }//GEN-LAST:event_btnAlmacenamientoActionPerformed
+
+    private void btnCultivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCultivoActionPerformed
+      
+    }//GEN-LAST:event_btnCultivoActionPerformed
+
+    private void btnUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuarioActionPerformed
+       new FrmUsuario().setVisible(true);
+    }//GEN-LAST:event_btnUsuarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +283,18 @@ public class FrmInicio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAlmacenamiento;
+    private javax.swing.JButton btnCerrarSeccion;
+    private javax.swing.JButton btnCultivo;
+    private javax.swing.JButton btnProduccion;
+    private javax.swing.JButton btnTrabajador;
+    private javax.swing.JButton btnUsuario;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     // End of variables declaration//GEN-END:variables
 }
