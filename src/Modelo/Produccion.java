@@ -81,13 +81,7 @@ public class Produccion {
 
     @Override
     public String toString() {
-        return "Produccion{"
-                + "id=" + id
-                + ", fecha=" + fecha
-                + ", CantidadRecolectada=" + cantidadRecolectada
-                + ", calidad='" + calidad + '\''
-                + ", productividad=" + productividad
-                + ", destino='" + destino + '\''
-                + '}';
+        return "Produccion{" + "id=" + id + ", fecha=" + fecha + ", cantidadRecolectada=" + cantidadRecolectada + ", calidad=" + calidad + ", productividad=" + productividad + ", destino=" + destino + '}';
     }
+
 }
