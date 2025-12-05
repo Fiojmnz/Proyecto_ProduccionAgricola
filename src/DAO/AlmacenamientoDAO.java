@@ -79,8 +79,10 @@ public class AlmacenamientoDAO {
         Almacenamiento a = new Almacenamiento();
         a.setId(rs.getInt("id"));
         a.setProducto(rs.getString("producto"));
-        a.setCantidad(rs.getInt("cantidad"));
+        a.setCantidad(rs.getDouble("cantidad")); 
         a.setFechaIngreso(rs.getDate("fecha_ingreso").toLocalDate());
+        Date fechaEgreso = rs.getDate("fecha_egreso");
+        a.setFechaEgreso(fechaEgreso != null ? fechaEgreso.toLocalDate() : null);
         return a;
     }
 }
