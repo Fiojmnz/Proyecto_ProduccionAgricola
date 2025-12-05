@@ -4,6 +4,8 @@
  */
 package Vista;
 
+
+
 /**
  *
  * @author AsusVivobook
@@ -16,6 +18,9 @@ public class FrmTrabajador extends javax.swing.JFrame {
     public FrmTrabajador() {
         initComponents();
     }
+
+    
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
