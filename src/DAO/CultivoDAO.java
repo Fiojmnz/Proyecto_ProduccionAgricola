@@ -4,7 +4,6 @@
  */
 package DAO;
 
-
 import DB.ConnectionFactory;
 import Enum.EstadoCrecimiento;
 import Enum.TipoCultivo;
@@ -22,8 +21,8 @@ import java.sql.SQLException;
  * @author gipsy
  */
 public class CultivoDAO {
-     public boolean agregar(Cultivo c) {
-        String sql = "INSERT INTO cultivos(Nombre, Tipo, AreaSembrada,EstadoCrecimienti, fechaSiembra, FechaCosecha) VALUES ()";
+    public boolean agregar(Cultivo c) {
+        String sql = "INSERT INTO cultivos(Nombre, Tipo, AreaSembrada, EstadoCrecimiento, FechaSiembra, FechaCosecha) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection con = ConnectionFactory.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, c.getNombre());
@@ -38,40 +37,41 @@ public class CultivoDAO {
             }
             return true;
         } catch (SQLException e) {
-            throw new RuntimeException("Error al el agregar cultivo", e);
+            throw new RuntimeException("Error al agregar cultivo", e);
         }
     }
- 
-public List<Cultivo> listar(String filtroNombre) {
-    List<Cultivo> list = new ArrayList<>();
-    String sql = "SELECT * FROM cultivos";
-    if (filtroNombre != null && !filtroNombre.isBlank()) {
-        sql += " WHERE nombre LIKE";
-    }
 
-    try (Connection con = ConnectionFactory.getConnection();
-         PreparedStatement ps = con.prepareStatement(sql)) {
-
-        if (filtroNombre != null && !filtroNombre.isBlank()) {
-            ps.setString(1, "%" + filtroNombre + "%");
+    public List<Cultivo> listar(String filtroNombre) {
+        List<Cultivo> list = new ArrayList<>();
+        String sql = "SELECT * FROM cultivos";
+        boolean filtrar = filtroNombre != null && !filtroNombre.isBlank();
+        if (filtrar) {
+            sql += " WHERE Nombre LIKE ?";
         }
 
-        try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Cultivo c = map(rs);
-                list.add(c);
+        try (Connection con = ConnectionFactory.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            if (filtrar) {
+                ps.setString(1, "%" + filtroNombre + "%");
             }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Cultivo c = map(rs);
+                    list.add(c);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al listar cultivos", e);
         }
 
-    } catch (SQLException e) {
-        throw new RuntimeException("Error a la listar cultivos", e);
+        return list;
     }
 
-    return list;
-}
-    
     public boolean actualizar(Cultivo c) {
-        String sql = "UPDATE cultivos SET Nombre, Tipo,AreaSembrada,EstadoCrecimiento,FechaSiembra , FechaCosecha WHERE id";
+        String sql = "UPDATE cultivos SET Nombre=?, Tipo=?, AreaSembrada=?, EstadoCrecimiento=?, FechaSiembra=?, FechaCosecha=? WHERE id=?";
         try (Connection con = ConnectionFactory.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, c.getNombre());
@@ -83,7 +83,7 @@ public List<Cultivo> listar(String filtroNombre) {
             ps.setInt(7, c.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error al el actualizar cultivo", e);
+            throw new RuntimeException("Error al actualizar cultivo", e);
         }
     }
 
@@ -103,10 +103,10 @@ public List<Cultivo> listar(String filtroNombre) {
         c.setId(rs.getInt("id"));
         c.setNombre(rs.getString("Nombre"));
         c.setTipo(TipoCultivo.valueOf(rs.getString("Tipo")));
-        c.setAreaSembrada(rs.getDouble("area"));
-        c.setEstadoCrecimiento(EstadoCrecimiento.valueOf(rs.getString("Estado")));
+        c.setAreaSembrada(rs.getDouble("AreaSembrada"));
+        c.setEstadoCrecimiento(EstadoCrecimiento.valueOf(rs.getString("EstadoCrecimiento")));
         c.setFechaSiembra(rs.getDate("FechaSiembra"));
-        c.setFechaCosecha(rs.getDate("FechaCosecha")); 
+        c.setFechaCosecha(rs.getDate("FechaCosecha"));
         return c;
-  }
+    }
 }
