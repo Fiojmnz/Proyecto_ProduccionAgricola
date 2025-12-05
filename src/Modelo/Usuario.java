@@ -46,7 +46,7 @@ public class Usuario {
     }
 
     public void setPasswordHash(String passwordHash) {
-        this.encriptadorContraseña = encriptadorContraseña;
+        this.encriptadorContraseña = passwordHash;
     }
 
     public void setRol(Rol rol) {
