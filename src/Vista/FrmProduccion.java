@@ -4,19 +4,22 @@
  */
 package Vista;
 
+import Enum.Rol;
+
 /**
  *
  * @author AsusVivobook
  */
 public class FrmProduccion extends javax.swing.JFrame {
-
+      
     /**
      * Creates new form FrmProduccion
      */
-    public FrmProduccion() {
-        initComponents();
-    }
-
+   public FrmProduccion() {
+    
+    initComponents();
+   
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
