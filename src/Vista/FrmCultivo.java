@@ -52,47 +52,49 @@ public class FrmCultivo extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 255, 153));
 
-        jPanel1.setBackground(new java.awt.Color(102, 255, 51));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setForeground(new java.awt.Color(153, 255, 51));
 
-        jLabel1.setBackground(new java.awt.Color(255, 0, 204));
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel1.setText("    GESTION DE CULTIVO");
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel1.setText("Gestión de Cultivo");
         jLabel1.setOpaque(true);
 
-        lblId.setBackground(new java.awt.Color(255, 51, 204));
-        lblId.setForeground(new java.awt.Color(51, 51, 255));
-        lblId.setText("Id");
+        lblId.setBackground(new java.awt.Color(255, 255, 255));
+        lblId.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        lblId.setText("ID:");
+        lblId.setToolTipText("");
         lblId.setOpaque(true);
 
-        lblNombre.setBackground(new java.awt.Color(255, 51, 204));
-        lblNombre.setForeground(new java.awt.Color(0, 0, 255));
-        lblNombre.setText("Nombre");
+        lblNombre.setBackground(new java.awt.Color(255, 255, 255));
+        lblNombre.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        lblNombre.setText("Nombre:");
         lblNombre.setOpaque(true);
 
-        lblTipo.setBackground(new java.awt.Color(255, 51, 204));
-        lblTipo.setForeground(new java.awt.Color(0, 0, 255));
-        lblTipo.setText("Tipo Cultivo");
+        lblTipo.setBackground(new java.awt.Color(255, 255, 255));
+        lblTipo.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        lblTipo.setText("Tipo Cultivo:");
         lblTipo.setOpaque(true);
 
-        lblArea.setBackground(new java.awt.Color(255, 0, 204));
-        lblArea.setForeground(new java.awt.Color(0, 0, 204));
-        lblArea.setText("Area Sembrada");
+        lblArea.setBackground(new java.awt.Color(255, 255, 255));
+        lblArea.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        lblArea.setText("Area Sembrada:");
         lblArea.setOpaque(true);
 
-        lblEstado.setBackground(new java.awt.Color(255, 0, 204));
-        lblEstado.setForeground(new java.awt.Color(0, 0, 204));
-        lblEstado.setText("Estado");
+        lblEstado.setBackground(new java.awt.Color(255, 255, 255));
+        lblEstado.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        lblEstado.setText("Estado:");
         lblEstado.setOpaque(true);
 
-        lblFechaSiembra.setBackground(new java.awt.Color(255, 0, 204));
-        lblFechaSiembra.setForeground(new java.awt.Color(0, 51, 204));
-        lblFechaSiembra.setText("Fecha Siembra");
+        lblFechaSiembra.setBackground(new java.awt.Color(255, 255, 255));
+        lblFechaSiembra.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        lblFechaSiembra.setText("Fecha Siembra:");
         lblFechaSiembra.setOpaque(true);
 
-        lblFechaCosecha.setBackground(new java.awt.Color(255, 0, 204));
-        lblFechaCosecha.setForeground(new java.awt.Color(0, 0, 204));
-        lblFechaCosecha.setText("Fecha Cosecha");
+        lblFechaCosecha.setBackground(new java.awt.Color(255, 255, 255));
+        lblFechaCosecha.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        lblFechaCosecha.setText("Fecha Cosecha:");
         lblFechaCosecha.setOpaque(true);
 
         txtId.addActionListener(new java.awt.event.ActionListener() {
@@ -114,15 +116,12 @@ public class FrmCultivo extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(109, 109, 109)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblId, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblTipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblArea, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                            .addComponent(lblArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblFechaSiembra, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblFechaCosecha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -139,18 +138,20 @@ public class FrmCultivo extends javax.swing.JFrame {
                                     .addComponent(txtAreaSembrada)
                                     .addComponent(cbEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(txtFechaSiembra)
-                                    .addComponent(txtFechaCosecha))))))
-                .addContainerGap(107, Short.MAX_VALUE))
+                                    .addComponent(txtFechaCosecha)))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(167, 167, 167)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(173, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -179,16 +180,27 @@ public class FrmCultivo extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel2.setBackground(new java.awt.Color(51, 255, 0));
+        jPanel2.setBackground(new java.awt.Color(235, 231, 231));
 
+        btnGuardar.setBackground(new java.awt.Color(204, 204, 255));
+        btnGuardar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnGuardar.setText("Guardar");
 
+        btnActualizar.setBackground(new java.awt.Color(204, 255, 204));
+        btnActualizar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnActualizar.setText("Actualizar");
 
+        btnEliminar.setBackground(new java.awt.Color(255, 204, 204));
+        btnEliminar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnEliminar.setText("Eliminar");
 
+        btnLimpiar.setBackground(new java.awt.Color(255, 204, 255));
+        btnLimpiar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnLimpiar.setText("Limpiar");
 
+        btnVerTabla.setBackground(new java.awt.Color(153, 0, 153));
+        btnVerTabla.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
+        btnVerTabla.setForeground(new java.awt.Color(255, 255, 255));
         btnVerTabla.setText("VerTabla");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -200,13 +212,13 @@ public class FrmCultivo extends javax.swing.JFrame {
                 .addComponent(btnGuardar)
                 .addGap(54, 54, 54)
                 .addComponent(btnActualizar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                .addGap(59, 59, 59)
                 .addComponent(btnEliminar)
-                .addGap(41, 41, 41)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnLimpiar)
                 .addGap(32, 32, 32))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(210, 210, 210)
+                .addGap(249, 249, 249)
                 .addComponent(btnVerTabla)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -219,9 +231,9 @@ public class FrmCultivo extends javax.swing.JFrame {
                     .addComponent(btnActualizar)
                     .addComponent(btnEliminar)
                     .addComponent(btnLimpiar))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(btnVerTabla)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -229,22 +241,16 @@ public class FrmCultivo extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(66, 66, 66)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(49, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42))
+                .addGap(0, 6, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
