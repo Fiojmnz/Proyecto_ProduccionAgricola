@@ -6,7 +6,7 @@ package Hilos;
 
 import Controlador.AlmacenamientoController;
 import Modelo.AlmacenamientoDTO;
-import java.time.LocalDate;
+import java.sql.Date;
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -27,17 +27,26 @@ public class AlertasAlmacenamientoHilos extends Thread {
     } 
 
     @Override
-    public void run() {
-        while (true) {
-            List<AlmacenamientoDTO> inventario = controller.listarInventario();
-            for (AlmacenamientoDTO a : inventario) {
-                long dias = ChronoUnit.DAYS.between(a.getFechaIngreso(), LocalDate.now());
-                if (dias >= UmbralDias) {
-                    System.out.println("ALERTA: Producto " + a.getProducto() + " lleva " + dias + " días almacenado.");
-                    
-                }
+public void run() {
+    while (true) {
+        List<AlmacenamientoDTO> inventario = controller.listarInventario();
+        
+        for (AlmacenamientoDTO a : inventario) {
+            long dias = ChronoUnit.DAYS.between(
+                a.getFechaIngreso().toLocalDate(),  
+                java.time.LocalDate.now()           
+            );
+
+            if (dias >= UmbralDias) {
+                System.out.println("ALERTA: Producto " + a.getProducto() +
+                                   " lleva " + dias + " días almacenado.");
             }
-            try { Thread.sleep(60_000); } catch (InterruptedException ignored) {}
         }
+
+        try { 
+            Thread.sleep(60_000); 
+        } catch (InterruptedException ignored) {}
     }
 }
+}
+
