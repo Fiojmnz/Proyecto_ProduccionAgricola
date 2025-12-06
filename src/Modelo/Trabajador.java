@@ -17,7 +17,7 @@ public class Trabajador {
     private String horario;
     private double salario;
 
-    public Trabajador() {    //vacio para: evitar errores y tener flexibilidad
+    public Trabajador() {    
     }
 
     public Trabajador(String cedula, String nombre, String telefono, String correo, String puesto, String horario, double salario) {
