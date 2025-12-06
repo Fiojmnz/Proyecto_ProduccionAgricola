@@ -4,7 +4,7 @@
  */
 package Modelo;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 
 /**
@@ -13,7 +13,7 @@ import java.time.LocalDate;
  */
 public class Produccion {
     private int id;                     
-    private LocalDate fecha;            
+    private Date fecha;            
     private double cantidadRecolectada;
     private String calidad;             
     private double productividad;   // calculado, no se guarda en DB
@@ -24,7 +24,7 @@ public class Produccion {
         
     }
 
-    public Produccion(LocalDate fecha, double cantidadRecolectada, String calidad, String destino) {
+    public Produccion(Date fecha, double cantidadRecolectada, String calidad, String destino) {
         this.fecha = fecha;
         this.cantidadRecolectada = cantidadRecolectada;
         this.calidad = calidad;
@@ -35,7 +35,7 @@ public class Produccion {
         return id;
     }
 
-    public LocalDate getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
@@ -59,7 +59,7 @@ public class Produccion {
         this.id = id;
     }
 
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
