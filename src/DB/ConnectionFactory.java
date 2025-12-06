@@ -14,7 +14,7 @@ import java.sql.SQLException;
  */
 
 public class ConnectionFactory {
-    private static final String URL = "jdbc:mariadb://localhost:3306/Proyecto_ProduccionAgricola";
+   private static final String URL = "jdbc:mysql://localhost:3306/Proyecto_ProduccionAgricola";
     private static final String USER = "root";
     private static final String PASS = "Root123@";
 
@@ -30,8 +30,15 @@ public class ConnectionFactory {
         return instancia;
     }
 
-   
-    public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASS);
+   public Connection getConnection() throws SQLException {
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+    } 
+    catch (ClassNotFoundException e)
+    {
+        System.out.println("Driver MySQL no encontrado: " + e.getMessage());
     }
+    
+    return DriverManager.getConnection(URL, USER, PASS);
+}
 }
