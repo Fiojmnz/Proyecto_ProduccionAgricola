@@ -4,7 +4,7 @@
  */
 package Modelo;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 
 /**
@@ -13,7 +13,7 @@ import java.time.LocalDate;
  */
 public class ProduccionDTO {
     private int id;
-    private LocalDate fecha;
+    private Date fecha;
     private double cantidadRecolectada;
     private String calidad;
     private double productividad; // calculado en servicio
@@ -23,7 +23,7 @@ public class ProduccionDTO {
         return id;
     }
 
-    public LocalDate getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
@@ -47,7 +47,7 @@ public class ProduccionDTO {
         this.id = id;
     }
 
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
