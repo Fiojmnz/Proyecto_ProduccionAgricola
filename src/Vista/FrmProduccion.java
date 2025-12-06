@@ -4,22 +4,50 @@
  */
 package Vista;
 
+import Controlador.ProduccionController;
 import Enum.Rol;
-
+import Modelo.ProduccionDTO;
+import Vista.FrmInicio;
+import javax.swing.JOptionPane;
+import java.sql.SQLException;
+import java.sql.Date;
+import Enum.Destino;
 /**
  *
  * @author AsusVivobook
  */
 public class FrmProduccion extends javax.swing.JFrame {
-      
+      private ProduccionController controller;
+      private String username; 
+      private Rol rol;
+
     /**
      * Creates new form FrmProduccion
      */
-   public FrmProduccion() {
-    
-    initComponents();
-   
+   public FrmProduccion(String username, Rol rol) {
+        this(); 
+       this.username = username;
+        this.rol = rol;
+     }
+     
+    public FrmProduccion() { 
+      initComponents();
+     setLocationRelativeTo(null);
+
+      try {
+     controller = new ProduccionController();
+     } catch (SQLException ex) {
+    JOptionPane.showMessageDialog(this, "Error al conectar: " + ex.getMessage());
+    }
+       CargarBolas();
+    }
+     private void CargarBolas() {
+    jComboBox1.removeAllItems();
+    for (Destino  destino : Destino.values()) {
+        jComboBox1.addItem(destino.name());
+    }
 }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,7 +65,6 @@ public class FrmProduccion extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
         btnagregar = new javax.swing.JButton();
         btnactualizar = new javax.swing.JButton();
         btneliminar = new javax.swing.JButton();
@@ -45,14 +72,12 @@ public class FrmProduccion extends javax.swing.JFrame {
         btnSalir = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
         btnVerTabla = new javax.swing.JButton();
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,13 +98,10 @@ public class FrmProduccion extends javax.swing.JFrame {
         jLabel13.setText("Cantidad:");
 
         jLabel14.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
-        jLabel14.setText("Unidad:");
+        jLabel14.setText("Calidad");
 
         jLabel15.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
-        jLabel15.setText("Responsable:");
-
-        jLabel16.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
-        jLabel16.setText("Observaciones:");
+        jLabel15.setText("Destino");
 
         btnagregar.setBackground(new java.awt.Color(102, 255, 102));
         btnagregar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
@@ -105,24 +127,35 @@ public class FrmProduccion extends javax.swing.JFrame {
         btneliminar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btneliminar.setForeground(new java.awt.Color(255, 255, 255));
         btneliminar.setText("Eliminar");
+        btneliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btneliminarActionPerformed(evt);
+            }
+        });
 
         btnbuscar.setBackground(new java.awt.Color(255, 102, 51));
         btnbuscar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnbuscar.setForeground(new java.awt.Color(255, 255, 255));
         btnbuscar.setText("ListarPorfecha");
+        btnbuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbuscarActionPerformed(evt);
+            }
+        });
 
         btnSalir.setBackground(new java.awt.Color(153, 51, 255));
         btnSalir.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnSalir.setForeground(new java.awt.Color(255, 255, 255));
         btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
 
         btnVerTabla.setBackground(new java.awt.Color(255, 255, 153));
         btnVerTabla.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
@@ -132,9 +165,9 @@ public class FrmProduccion extends javax.swing.JFrame {
 
         jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        jTextField5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-
         jButton1.setText("GenerarReporte");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -175,15 +208,12 @@ public class FrmProduccion extends javax.swing.JFrame {
                                     .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(36, 36, 36)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField3)
+                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                                     .addComponent(jTextField4)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)))
+                                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGap(144, 144, 144)
+                                .addComponent(jLabel9))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(108, 108, 108)
                         .addComponent(jButton1)
@@ -217,14 +247,12 @@ public class FrmProduccion extends javax.swing.JFrame {
                     .addComponent(jLabel14)
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel15)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel16)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                        .addGap(1, 1, 1))
+                    .addComponent(jLabel15))
+                .addGap(129, 129, 129)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnagregar)
                     .addComponent(btnactualizar)
@@ -259,12 +287,105 @@ public class FrmProduccion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnagregarActionPerformed
-        // TODO add your handling code here:
+   try {
+        Date fecha = Date.valueOf(jFormattedTextField1.getText().trim()); 
+        double cantidad = Double.parseDouble(jTextField2.getText().trim());
+        String calidad = jTextField4.getText().trim();
+        
+       
+        String destino = jComboBox1.getSelectedItem().toString().trim(); 
+
+     
+        if (calidad.isEmpty() || destino.isEmpty()) {
+             JOptionPane.showMessageDialog(this, "Calidad y Destino son obligatorios.");
+             return;
+        }
+        
+        controller.registrarProduccion(fecha, cantidad, calidad, destino);
+
+        JOptionPane.showMessageDialog(this, "Registro agregado correctamente");
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Error: La Cantidad debe ser un valor numérico válido.");
+    } catch (IllegalArgumentException e) {
+ 
+        JOptionPane.showMessageDialog(this, "Error de Datos: Verifique la Fecha o las validaciones: " + e.getMessage());
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al agregar: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnagregarActionPerformed
 
     private void btnactualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnactualizarActionPerformed
-        // TODO add your handling code here:
+        try {
+        if (jTextField1.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El ID es obligatorio para actualizar.");
+            return;
+        }
+        
+        int id = Integer.parseInt(jTextField1.getText().trim());
+        Date fecha = Date.valueOf(jFormattedTextField1.getText().trim());
+        double cantidad = Double.parseDouble(jTextField2.getText().trim());
+        
+
+        String Calidad = jTextField4.getText().trim();
+        String Destino = jComboBox1.getSelectedItem().toString().trim();
+        
+        ProduccionDTO dto = new ProduccionDTO();
+        dto.setId(id);
+        dto.setFecha(fecha);
+        dto.setCantidadRecolectada(cantidad);
+        dto.setCalidad(Calidad);
+        dto.setDestino(Destino); 
+        
+        if (controller.actualizarProduccion(dto)) {
+            JOptionPane.showMessageDialog(this, "Actualizado correctamente");
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontró el registro");
+        }
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Error: ID o Cantidad deben ser valores numéricos válidos.");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al actualizar: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnactualizarActionPerformed
+
+    private void btneliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneliminarActionPerformed
+        try {
+        int id = Integer.parseInt(jTextField1.getText().trim());
+
+        int op = JOptionPane.showConfirmDialog(
+                this,
+                "¿Eliminar este registro?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (op == JOptionPane.YES_OPTION) {
+            if (controller.eliminarProduccion(id)) {
+                JOptionPane.showMessageDialog(this, "Eliminado correctamente");
+            } else {
+                JOptionPane.showMessageDialog(this, "No existe el ID");
+            }
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage());
+    }
+    }//GEN-LAST:event_btneliminarActionPerformed
+
+    private void btnbuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbuscarActionPerformed
+       
+    }//GEN-LAST:event_btnbuscarActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+      FrmInicio inicio = new FrmInicio(this.username, this.rol);
+    inicio.setLocationRelativeTo(null);
+    inicio.setVisible(true);
+    this.dispose();
+
+
+    }//GEN-LAST:event_btnSalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -309,6 +430,7 @@ public class FrmProduccion extends javax.swing.JFrame {
     private javax.swing.JButton btnbuscar;
     private javax.swing.JButton btneliminar;
     private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -316,15 +438,11 @@ public class FrmProduccion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
 }
