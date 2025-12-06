@@ -6,7 +6,7 @@ package DAO;
 
 import Modelo.Produccion;
 import java.sql.*;
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class ProduccionDAO {
     public boolean agregar(Produccion p) {
         String sql = "INSERT INTO produccion(fecha, cantidad_recolectada, calidad, destino) VALUES (?,?,?,?)";
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setDate(1, Date.valueOf(p.getFecha()));
+            ps.setDate(1, p.getFecha());
             ps.setDouble(2, p.getCantidadRecolectada());
             ps.setString(3, p.getCalidad());
             ps.setString(4, p.getDestino());
@@ -54,12 +54,12 @@ public class ProduccionDAO {
         }
     }
 
-    public List<Produccion> listarPorFecha(LocalDate inicio, LocalDate fin) {
+    public List<Produccion> listarPorFecha(Date inicio, Date fin) {
         String sql = "SELECT * FROM produccion WHERE fecha BETWEEN ? AND ?";
         List<Produccion> list = new ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDate(1, Date.valueOf(inicio));
-            ps.setDate(2, Date.valueOf(fin));
+            ps.setDate(1, inicio);
+            ps.setDate(2, fin);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     list.add(map(rs));
@@ -74,7 +74,7 @@ public class ProduccionDAO {
     public boolean actualizar(Produccion p) {
         String sql = "UPDATE produccion SET fecha=?, cantidad_recolectada=?, calidad=?, destino=? WHERE id=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDate(1, Date.valueOf(p.getFecha()));
+            ps.setDate(1, p.getFecha());
             ps.setDouble(2, p.getCantidadRecolectada());
             ps.setString(3, p.getCalidad());
             ps.setString(4, p.getDestino());
@@ -98,7 +98,7 @@ public class ProduccionDAO {
     private Produccion map(ResultSet rs) throws SQLException {
         Produccion p = new Produccion();
         p.setId(rs.getInt("id"));
-        p.setFecha(rs.getDate("fecha").toLocalDate());
+        p.setFecha(rs.getDate("fecha"));
         p.setCantidadRecolectada(rs.getDouble("cantidad_recolectada"));
         p.setCalidad(rs.getString("calidad"));
         p.setDestino(rs.getString("destino"));
