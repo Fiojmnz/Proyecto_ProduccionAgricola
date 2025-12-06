@@ -4,11 +4,13 @@
  */
 package Controlador;
 
+import DB.ConnectionFactory;
 import Modelo.AlmacenamientoDTO;
 import Servicios.AlmacenamientoServicios;
 import Hilos.AlertasAlmacenamientoHilos;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -18,9 +20,12 @@ import java.util.List;
 public class AlmacenamientoController {
     private final AlmacenamientoServicios service;
 
-    public AlmacenamientoController(Connection conn) {
+    public AlmacenamientoController() throws SQLException {
+        Connection conn = ConnectionFactory.getInstancia().getConnection();
         this.service = new AlmacenamientoServicios(conn);
     }
+
+    
 
     public AlmacenamientoDTO registrarAlmacenamiento(String producto, int cantidad, java.time.LocalDate fechaIngreso) {
         AlmacenamientoDTO dto = new AlmacenamientoDTO();

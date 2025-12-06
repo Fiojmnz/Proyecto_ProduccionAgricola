@@ -19,7 +19,7 @@ import java.util.List;
 public class TrabajadorDAO {
     private final Connection conn;
 
-    //Recibe la conexión desde fuera
+   
     public TrabajadorDAO(Connection conn) {
         this.conn = conn;
     }

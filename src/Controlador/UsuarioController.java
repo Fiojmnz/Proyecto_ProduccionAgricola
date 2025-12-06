@@ -8,7 +8,9 @@ import Modelo.UsuarioDTO;
 import Enum.Rol;
 import Servicios.UsuarioServicios;
 import DAO.UsuarioDAO;
+import DB.ConnectionFactory;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -16,13 +18,12 @@ import java.util.List;
  * @author AsusVivobook
  */
 public class UsuarioController {
+  private final UsuarioServicios service;
 
-    private final UsuarioServicios service;
-
-    public UsuarioController(Connection conn) {
+    public UsuarioController() throws SQLException {
+        Connection conn = ConnectionFactory.getInstancia().getConnection();
         this.service = new UsuarioServicios(new UsuarioDAO(conn));
     }
-
     public UsuarioDTO registrarUsuario(String username, String password, Rol rol) {
         UsuarioDTO dto = new UsuarioDTO();
         dto.setUsername(username);

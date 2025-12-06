@@ -5,10 +5,12 @@
 package Controlador;
 
 import DAO.TrabajadorDAO;
+import DB.ConnectionFactory;
 import Modelo.TrabajadorDTO;
 import Servicios.TrabajadorServicios;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -18,12 +20,14 @@ import java.util.List;
 public class TrabajadorController {
     private final TrabajadorServicios service;
 
-    public TrabajadorController(Connection conn) {
+    public TrabajadorController() throws SQLException {
+        Connection conn = ConnectionFactory.getInstancia().getConnection();
         this.service = new TrabajadorServicios(new TrabajadorDAO(conn));
     }
 
     public TrabajadorDTO registrarTrabajador(String cedula, String nombre, String telefono,
             String correo, String puesto, String horario, double salario) {
+
         TrabajadorDTO dto = new TrabajadorDTO();
         dto.setCedula(cedula);
         dto.setNombre(nombre);
@@ -32,6 +36,7 @@ public class TrabajadorController {
         dto.setPuesto(puesto);
         dto.setHorario(horario);
         dto.setSalario(salario);
+
         return service.registrar(dto);
     }
 

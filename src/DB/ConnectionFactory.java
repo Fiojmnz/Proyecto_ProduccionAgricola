@@ -18,9 +18,20 @@ public class ConnectionFactory {
     private static final String USER = "root";
     private static final String PASS = "Root123@";
 
-    private ConnectionFactory() {}
+    private static ConnectionFactory instancia;
 
-    public static Connection getConnection() throws SQLException {
+    private  ConnectionFactory() {
+    }
+    
+     public static synchronized ConnectionFactory getInstancia() {
+        if (instancia == null) {
+            instancia = new ConnectionFactory();
+        }
+        return instancia;
+    }
+
+   
+    public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASS);
     }
 }

@@ -36,7 +36,7 @@ public class UsuarioDAO {
         return false;
     }
 
-    // CORRECCIÓN aquí:
+  
     public Usuario buscarPorUsername(String username) {
         String sql = "SELECT * FROM usuarios WHERE username = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
