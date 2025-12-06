@@ -3,20 +3,63 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Vista;
-
+import Controlador.TrabajadorController; 
+import Controlador.AlmacenamientoController; 
+import Modelo.AlmacenamientoDTO;
+import Modelo.TrabajadorDTO;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author gipsy
  */
-public class JPanelAlmacenamiento extends javax.swing.JPanel {
-
+public class JPanelAlmacenamiento extends javax.swing.JFrame {
+  private AlmacenamientoController controller;
     /**
      * Creates new form JpanelAlmacenamiento
      */
-    public JPanelAlmacenamiento() {
+   public JPanelAlmacenamiento() {
         initComponents();
+        this.setLocationRelativeTo(null); // Ahora funciona (es JFrame)
+        this.setTitle("Lista de Almacenamiento");
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Ahora funciona
+
+        try {
+            controller = new AlmacenamientoController();
+            cargarTablaAlmacenamiento(); // CORRECCIÓN 3: Llamar al método de Almacenamiento
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al conectar o cargar datos: " + ex.getMessage());
+        }
     }
 
+    // AÑADIDO: Método de carga para Almacenamiento
+    private void cargarTablaAlmacenamiento() {
+        try {
+          List<AlmacenamientoDTO> lista = controller.listarInventario();   
+            DefaultTableModel modelo = new DefaultTableModel();
+            modelo.setColumnIdentifiers(new String[]{
+                "Id", "Producto", "Cantidad", "FechaIngreso", "FechaEgreso"
+            });
+            
+            for (AlmacenamientoDTO dto : lista) {
+                modelo.addRow(new Object[]{
+                    dto.getId(),
+                    dto.getProducto(),
+                    dto.getCantidad(),
+                    dto.getFechaIngreso(),
+                    dto.getFechaEgreso()
+                });
+            }
+
+            jTable1.setModel(modelo);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al llenar la tabla: " + e.getMessage());
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
