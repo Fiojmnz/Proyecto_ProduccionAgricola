@@ -8,6 +8,7 @@ import Modelo.Almacenamiento;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Date;
 
 /**
  *
@@ -25,7 +26,7 @@ public class AlmacenamientoDAO {
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, a.getProducto());
             ps.setDouble(2, a.getCantidad());
-            ps.setDate(3, Date.valueOf(a.getFechaIngreso()));
+            ps.setDate(3, a.getFechaIngreso());
             ps.executeUpdate();
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
@@ -57,7 +58,7 @@ public class AlmacenamientoDAO {
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, a.getProducto());
             ps.setDouble(2,  a.getCantidad());
-            ps.setDate(3, Date.valueOf(a.getFechaIngreso()));
+            ps.setDate(3, a.getFechaIngreso());
             ps.setInt(4, a.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -80,9 +81,9 @@ public class AlmacenamientoDAO {
         a.setId(rs.getInt("id"));
         a.setProducto(rs.getString("producto"));
         a.setCantidad(rs.getDouble("cantidad")); 
-        a.setFechaIngreso(rs.getDate("fecha_ingreso").toLocalDate());
-        Date fechaEgreso = rs.getDate("fecha_egreso");
-        a.setFechaEgreso(fechaEgreso != null ? fechaEgreso.toLocalDate() : null);
+       a.setFechaIngreso(rs.getDate("fecha_ingreso"));
+       a.setFechaEgreso(rs.getDate("fecha_egreso"));
+
         return a;
     }
 }
