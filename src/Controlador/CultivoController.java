@@ -31,8 +31,7 @@ public class CultivoController {
         this.servicios = new CultivoServicios(new CultivoDAO(conn));
     }
 
-    public CultivoDTO crearCultivo(String Nombre, TipoCultivo tipo, double AreaSembrada,
-                                   EstadoCrecimiento estadoCrecimiento, Date FechaSiembra, Date FechaCosecha) {
+    public CultivoDTO crearCultivo(String Nombre, TipoCultivo tipo, double AreaSembrada, EstadoCrecimiento estadoCrecimiento, Date FechaSiembra, Date FechaCosecha) {
         
         CultivoDTO dto = new CultivoDTO();
         dto.setNombre(Nombre);
