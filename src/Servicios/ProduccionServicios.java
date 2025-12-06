@@ -8,9 +8,9 @@ import DAO.ProduccionDAO;
 import Modelo.ProduccionDTO;
 import Mapper.ProduccionMapper;
 import Modelo.Produccion;
-
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,12 +43,12 @@ public class ProduccionServicios {
                 .collect(Collectors.toList());
     }
 
-    public List<ProduccionDTO> listarPorFecha(java.time.LocalDate inicio, java.time.LocalDate fin) {
-        return dao.listarPorFecha(inicio, fin)
-                .stream()
-                .map(ProduccionMapper::toDTO)
-                .collect(Collectors.toList());
-    }
+    public List<ProduccionDTO> listarPorFecha(Date inicio, Date fin) {
+    return dao.listarPorFecha(inicio, fin)
+        .stream()
+        .map(ProduccionMapper::toDTO)
+        .collect(Collectors.toList());
+}
 
     public boolean actualizar(ProduccionDTO dto) {
         Produccion p = ProduccionMapper.toEntity(dto);
