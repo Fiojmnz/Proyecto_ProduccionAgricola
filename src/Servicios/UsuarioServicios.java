@@ -42,6 +42,17 @@ public class UsuarioServicios {
 
         return UsuarioMapper.toDTO(u);
     }
+    public boolean existeUsername(String username) {
+    return dao.existeUsername(username);
+}
+public UsuarioDTO buscarPorUsername(String username) {
+    Usuario u = dao.buscarPorUsername(username);
+    return u != null ? UsuarioMapper.toDTO(u) : null;
+}
+public boolean eliminar(String username) {
+    return dao.eliminar(username);
+}
+
 
     public List<UsuarioDTO> listar() {
         return dao.listar()
