@@ -4,6 +4,12 @@
  */
 package Vista;
 
+import Controlador.TrabajadorController;
+import Enum.Rol;
+import Modelo.TrabajadorDTO;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import Vista.FrmInicio;
 
 
 /**
@@ -11,13 +17,38 @@ package Vista;
  * @author AsusVivobook
  */
 public class FrmTrabajador extends javax.swing.JFrame {
-
+    private TrabajadorController controller;
+    
+    private String username;
+    private Rol rol;       
     /**
      * Creates new form FrmTrabajadores
      */
-    public FrmTrabajador() {
-        initComponents();
+     public FrmTrabajador(String username, Rol rol) {
+        this(); 
+        this.username = username;
+        this.rol = rol;
     }
+    
+        public FrmTrabajador() { 
+        initComponents();
+        try {
+         controller = new TrabajadorController();
+} catch (SQLException e) {
+JOptionPane.showMessageDialog(this, "Error al conectar: " + e.getMessage());
+}
+        }
+
+private void limpiarCampos() {
+    jTextField1.setText("");
+    jTextField2.setText("");
+    jTextField3.setText("");
+    jTextField4.setText("");
+    jTextField5.setText("");
+    jTextField6.setText("");
+    txtHorario.setText(""); 
+    txtSalario.setText(""); 
+}
 
     
    
@@ -39,7 +70,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        Horario = new javax.swing.JLabel();
         btnAgregar = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
@@ -49,10 +80,11 @@ public class FrmTrabajador extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         btnVerTabla = new javax.swing.JButton();
         jTextField4 = new javax.swing.JTextField();
+        txtHorario = new javax.swing.JTextField();
+        Salario = new javax.swing.JLabel();
+        txtSalario = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,18 +111,28 @@ public class FrmTrabajador extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
         jLabel7.setText("Correo:");
 
-        jLabel8.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
-        jLabel8.setText("Dirección:");
+        Horario.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        Horario.setText("Horario");
 
         btnAgregar.setBackground(new java.awt.Color(0, 204, 153));
         btnAgregar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         btnActualizar.setBackground(new java.awt.Color(126, 188, 231));
         btnActualizar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnActualizar.setForeground(new java.awt.Color(255, 255, 255));
         btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setBackground(new java.awt.Color(255, 153, 153));
         btnEliminar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
@@ -105,6 +147,11 @@ public class FrmTrabajador extends javax.swing.JFrame {
         btnSalir.setBackground(new java.awt.Color(231, 227, 227));
         btnSalir.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -112,16 +159,32 @@ public class FrmTrabajador extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
         btnVerTabla.setBackground(new java.awt.Color(255, 153, 255));
         btnVerTabla.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnVerTabla.setForeground(new java.awt.Color(255, 255, 255));
         btnVerTabla.setText("Ver Tabla");
+        btnVerTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerTablaActionPerformed(evt);
+            }
+        });
 
         jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        txtHorario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHorarioActionPerformed(evt);
+            }
+        });
+
+        Salario.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        Salario.setText("Salario");
+
+        txtSalario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSalarioActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -137,38 +200,39 @@ public class FrmTrabajador extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(71, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnVerTabla)
-                        .addGap(244, 244, 244))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnSalir)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(117, 117, 117)
-                                    .addComponent(jLabel1))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel4)
-                                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel7))
-                                    .addGap(100, 100, 100)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-                                        .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-                                        .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-                                        .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-                                        .addComponent(jTextField4)))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(88, 88, 88)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(145, 145, 145))))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnSalir)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(117, 117, 117)
+                                .addComponent(jLabel1))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel7)
+                                    .addComponent(Horario, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                                    .addComponent(Salario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(88, 88, 88)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                                    .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                                    .addComponent(jTextField4)
+                                    .addComponent(txtHorario)
+                                    .addComponent(txtSalario))))
+                        .addGap(26, 26, 26)))
+                .addGap(145, 145, 145))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(233, 233, 233)
+                .addComponent(btnVerTabla)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,7 +247,6 @@ public class FrmTrabajador extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(2, 2, 2)
@@ -194,15 +257,9 @@ public class FrmTrabajador extends javax.swing.JFrame {
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel8)
-                        .addGap(80, 80, 80)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnAgregar)
-                            .addComponent(btnActualizar)
-                            .addComponent(btnEliminar)
-                            .addComponent(btnSalir)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(Horario))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -210,11 +267,21 @@ public class FrmTrabajador extends javax.swing.JFrame {
                         .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addGap(12, 12, 12)
+                        .addComponent(txtHorario, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Salario, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(52, 52, 52)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAgregar)
+                    .addComponent(btnActualizar)
+                    .addComponent(btnEliminar)
+                    .addComponent(btnSalir))
+                .addGap(18, 18, 18)
                 .addComponent(btnVerTabla)
-                .addGap(29, 29, 29))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -226,8 +293,9 @@ public class FrmTrabajador extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -238,8 +306,114 @@ public class FrmTrabajador extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
+      try {
+        String cedula = jTextField2.getText().trim();
+
+        if (cedula.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese la cédula a eliminar");
+            return;
+        }
+
+        if (controller.eliminarTrabajador(cedula)) {
+            JOptionPane.showMessageDialog(this, "Trabajador eliminado");
+            limpiarCampos();
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontró el trabajador");
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+      try {
+        String cedula = jTextField2.getText().trim();
+        String nombre = jTextField1.getText().trim();
+        String telefono = jTextField3.getText().trim();
+        String puesto = jTextField4.getText().trim();
+        String correo = jTextField5.getText().trim();
+        String horario = txtHorario.getText().trim();
+        String salarioText = txtSalario.getText().trim();
+
+        if (cedula.isEmpty() || nombre.isEmpty() || puesto.isEmpty() || salarioText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Cédula, Nombre, Puesto y Salario son campos obligatorios.");
+            return;
+        }
+
+
+        double salario = Double.parseDouble(salarioText);
+
+        controller.registrarTrabajador(cedula, nombre, telefono, correo, puesto, horario, salario);
+
+        JOptionPane.showMessageDialog(this, "Trabajador registrado correctamente");
+        limpiarCampos();
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Error: El Salario debe ser un valor numérico válido.");
+        
+    } catch (Exception e) {
+       
+        JOptionPane.showMessageDialog(this, "Error al registrar: " + e.getMessage());
+    }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+    try {
+        String cedula = jTextField2.getText().trim();
+        String nombre = jTextField1.getText().trim();
+        String puesto = jTextField4.getText().trim();
+        String salarioText = txtSalario.getText().trim();
+
+        if (cedula.isEmpty() || nombre.isEmpty() || puesto.isEmpty() || salarioText.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Cédula, Nombre, Puesto y Salario son campos obligatorios.");
+            return;
+        }
+
+
+        double salario = Double.parseDouble(salarioText);
+
+        TrabajadorDTO dto = new TrabajadorDTO();
+        dto.setCedula(cedula);
+        dto.setNombre(nombre);
+        dto.setTelefono(jTextField3.getText().trim());
+        dto.setPuesto(puesto);
+        dto.setCorreo(jTextField5.getText().trim());
+        dto.setHorario(txtHorario.getText().trim());
+        dto.setSalario(salario);
+
+        if (controller.actualizarTrabajador(dto)) {
+            JOptionPane.showMessageDialog(null, "Actualizado correctamente");
+        } else {
+            JOptionPane.showMessageDialog(null, "No se pudo actualizar (Cédula no encontrada)");
+        }
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Error: El Salario debe ser un valor numérico válido.");
+    } catch (Exception e) {
+
+        JOptionPane.showMessageDialog(null, "Error al actualizar: " + e.getMessage());
+    }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+       FrmInicio inicio = new FrmInicio(this.username, this.rol);
+    inicio.setLocationRelativeTo(null);
+    inicio.setVisible(true);
+    this.dispose();
+    }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void btnVerTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerTablaActionPerformed
+        new JPanelTrabajador().setVisible(true);
+    }//GEN-LAST:event_btnVerTablaActionPerformed
+
+    private void txtHorarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHorarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHorarioActionPerformed
+
+    private void txtSalarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSalarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSalarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -278,6 +452,8 @@ public class FrmTrabajador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Horario;
+    private javax.swing.JLabel Salario;
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
@@ -290,15 +466,14 @@ public class FrmTrabajador extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField txtHorario;
+    private javax.swing.JTextField txtSalario;
     // End of variables declaration//GEN-END:variables
 }
