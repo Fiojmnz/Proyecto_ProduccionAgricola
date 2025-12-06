@@ -4,18 +4,74 @@
  */
 package Vista;
 
+import Controlador.CultivoController;
+import Enum.EstadoCrecimiento;
+import Enum.TipoCultivo;
+import Modelo.Cultivo;
+import javax.swing.JOptionPane;
+import java.sql.SQLException;
+import java.sql.Date;
+import Enum.Rol;
+import Vista.FrmInicio;
 /**
  *
  * @author gipsy
  */
 public class FrmCultivo extends javax.swing.JFrame {
+   private CultivoController controller;
 
-    /**
-     * Creates new form FrmCultivo
-     */
-    public FrmCultivo() {
-        initComponents();
+    private String username;
+    private Rol rol; 
+
+
+    public FrmCultivo(String username, Rol rol) {
+        this(); 
+        this.username = username;
+        this.rol = rol;
     }
+
+
+    public FrmCultivo() {
+        initComponents(); 
+        setLocationRelativeTo(null);
+
+        try {
+            controller = new CultivoController();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al conectar: " + ex.getMessage());
+        }
+
+        CargarCombos();
+    }
+private void CargarCombos() {
+    cbTipo.removeAllItems();
+    for (TipoCultivo tipo : TipoCultivo.values()) {
+        cbTipo.addItem(tipo.name());
+    }
+
+    cbEstado.removeAllItems();
+    for (EstadoCrecimiento e : EstadoCrecimiento.values()) {
+        cbEstado.addItem(e.name());
+    }
+
+    }
+private void limpiarCampos() {
+    txtId.setText("");
+    txtNombre.setText("");
+    txtAreaSembrada.setText("");
+    txtFechaSiembra.setText("");
+    txtFechaCosecha.setText("");
+    cbTipo.setSelectedIndex(0);
+    cbEstado.setSelectedIndex(0);
+}
+   
+private java.sql.Date convertirFecha(String texto) throws Exception {
+    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+    sdf.setLenient(false); // Evita fechas inválidas tipo 2024-13-40
+    java.util.Date fecha = sdf.parse(texto);
+    return new java.sql.Date(fecha.getTime());
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,14 +96,15 @@ public class FrmCultivo extends javax.swing.JFrame {
         cbTipo = new javax.swing.JComboBox<>();
         txtAreaSembrada = new javax.swing.JTextField();
         cbEstado = new javax.swing.JComboBox<>();
-        txtFechaSiembra = new javax.swing.JTextField();
-        txtFechaCosecha = new javax.swing.JTextField();
+        txtFechaSiembra = new javax.swing.JFormattedTextField();
+        txtFechaCosecha = new javax.swing.JFormattedTextField();
         jPanel2 = new javax.swing.JPanel();
         btnGuardar = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
         btnVerTabla = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 255, 153));
@@ -103,11 +160,34 @@ public class FrmCultivo extends javax.swing.JFrame {
             }
         });
 
+        txtNombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNombreActionPerformed(evt);
+            }
+        });
+
         cbTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbTipoActionPerformed(evt);
+            }
+        });
 
         cbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        txtFechaSiembra.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtFechaSiembra.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd "))));
+        txtFechaSiembra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFechaSiembraActionPerformed(evt);
+            }
+        });
+
+        txtFechaCosecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
+        txtFechaCosecha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFechaCosechaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -133,12 +213,13 @@ public class FrmCultivo extends javax.swing.JFrame {
                                     .addComponent(txtId, javax.swing.GroupLayout.Alignment.TRAILING)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(cbTipo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtAreaSembrada)
-                                    .addComponent(cbEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtFechaSiembra)
-                                    .addComponent(txtFechaCosecha)))))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtFechaCosecha, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtFechaSiembra, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(cbTipo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtAreaSembrada)
+                                        .addComponent(cbEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(167, 167, 167)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -150,9 +231,9 @@ public class FrmCultivo extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -170,14 +251,15 @@ public class FrmCultivo extends javax.swing.JFrame {
                     .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblFechaSiembra, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtFechaSiembra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblFechaSiembra, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                    .addComponent(txtFechaSiembra))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblFechaCosecha, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
-                    .addComponent(txtFechaCosecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblFechaCosecha, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addComponent(txtFechaCosecha)))
         );
 
         jPanel2.setBackground(new java.awt.Color(235, 231, 231));
@@ -228,23 +310,33 @@ public class FrmCultivo extends javax.swing.JFrame {
             }
         });
 
+        btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnGuardar)
-                .addGap(54, 54, 54)
-                .addComponent(btnActualizar)
-                .addGap(59, 59, 59)
-                .addComponent(btnEliminar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnLimpiar)
-                .addGap(32, 32, 32))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(249, 249, 249)
-                .addComponent(btnVerTabla)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(btnGuardar)
+                        .addGap(26, 26, 26)
+                        .addComponent(btnActualizar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEliminar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnLimpiar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnSalir))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(249, 249, 249)
+                        .addComponent(btnVerTabla)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -255,8 +347,9 @@ public class FrmCultivo extends javax.swing.JFrame {
                     .addComponent(btnGuardar)
                     .addComponent(btnActualizar)
                     .addComponent(btnEliminar)
-                    .addComponent(btnLimpiar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                    .addComponent(btnLimpiar)
+                    .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(btnVerTabla)
                 .addGap(20, 20, 20))
         );
@@ -286,24 +379,114 @@ public class FrmCultivo extends javax.swing.JFrame {
     }//GEN-LAST:event_txtIdActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
+      try {
+        String nombre = txtNombre.getText();
+        TipoCultivo tipo = TipoCultivo.valueOf(cbTipo.getSelectedItem().toString());
+        double area = Double.parseDouble(txtAreaSembrada.getText());
+        EstadoCrecimiento estado = EstadoCrecimiento.valueOf(cbEstado.getSelectedItem().toString());
+
+        java.sql.Date siembra = convertirFecha(txtFechaSiembra.getText());
+        java.sql.Date cosecha = convertirFecha(txtFechaCosecha.getText());
+
+        controller.crearCultivo(nombre, tipo, area, estado, siembra, cosecha);
+
+        JOptionPane.showMessageDialog(this, "Cultivo guardado correctamente");
+        limpiarCampos();
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al guardar: " + e.getMessage());
+    }
+
+    
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        // TODO add your handling code here:
+          try {
+        int id = Integer.parseInt(txtId.getText());
+        String nombre = txtNombre.getText();
+        TipoCultivo tipo = TipoCultivo.valueOf(cbTipo.getSelectedItem().toString());
+        double area = Double.parseDouble(txtAreaSembrada.getText());
+        EstadoCrecimiento estado = EstadoCrecimiento.valueOf(cbEstado.getSelectedItem().toString());
+
+        java.sql.Date siembra = convertirFecha(txtFechaSiembra.getText());
+        java.sql.Date cosecha = convertirFecha(txtFechaCosecha.getText());
+
+        Modelo.CultivoDTO dto = new Modelo.CultivoDTO();
+        dto.setId(id);
+        dto.setNombre(nombre);
+        dto.setTipo(tipo);
+        dto.setAreaSembrada(area);
+        dto.setEstadoCrecimiento(estado);
+        dto.setFechaSiembra(siembra);
+        dto.setFechaCosecha(cosecha);
+
+        if (controller.actualizarCultivo(dto)) {
+            JOptionPane.showMessageDialog(this, "Cultivo actualizado correctamente");
+            limpiarCampos();
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo actualizar");
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
+        try {
+        int id = Integer.parseInt(txtId.getText());
+        
+        int opcion = JOptionPane.showConfirmDialog(
+            this,
+            "¿Desea eliminar este cultivo?",
+            "Confirmar",
+            JOptionPane.YES_NO_OPTION
+        );
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            if (controller.eliminarCultivo(id)) {
+                JOptionPane.showMessageDialog(this, "Cultivo eliminado correctamente");
+                limpiarCampos();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo eliminar");
+            }
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-        // TODO add your handling code here:
+        limpiarCampos();
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnVerTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerTablaActionPerformed
-        // TODO add your handling code here:
+        new JPanelCultivo().setVisible(true);
     }//GEN-LAST:event_btnVerTablaActionPerformed
+
+    private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNombreActionPerformed
+
+    private void cbTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbTipoActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        FrmInicio inicio = new FrmInicio(this.username, this.rol);
+        inicio.setLocationRelativeTo(null);
+        inicio.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void txtFechaSiembraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaSiembraActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFechaSiembraActionPerformed
+
+    private void txtFechaCosechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaCosechaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFechaCosechaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -345,6 +528,7 @@ public class FrmCultivo extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnLimpiar;
+    private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnVerTabla;
     private javax.swing.JComboBox<String> cbEstado;
     private javax.swing.JComboBox<String> cbTipo;
@@ -359,8 +543,8 @@ public class FrmCultivo extends javax.swing.JFrame {
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblTipo;
     private javax.swing.JTextField txtAreaSembrada;
-    private javax.swing.JTextField txtFechaCosecha;
-    private javax.swing.JTextField txtFechaSiembra;
+    private javax.swing.JFormattedTextField txtFechaCosecha;
+    private javax.swing.JFormattedTextField txtFechaSiembra;
     private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
