@@ -8,7 +8,7 @@ import DB.ConnectionFactory;
 import Modelo.AlmacenamientoDTO;
 import Servicios.AlmacenamientoServicios;
 import Hilos.AlertasAlmacenamientoHilos;
-
+import java.sql.Date;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -25,15 +25,17 @@ public class AlmacenamientoController {
         this.service = new AlmacenamientoServicios(conn);
     }
 
-    
+    public AlmacenamientoDTO registrarAlmacenamiento(String producto, int cantidad, Date fechaIngreso, Date fechaEgreso) {
+    AlmacenamientoDTO dto = new AlmacenamientoDTO();
+    dto.setProducto(producto);
+    dto.setCantidad(cantidad);
+    dto.setFechaIngreso(fechaIngreso);
+    dto.setFechaEgreso(fechaEgreso);
+    return service.registrar(dto);
+}
 
-    public AlmacenamientoDTO registrarAlmacenamiento(String producto, int cantidad, java.time.LocalDate fechaIngreso) {
-        AlmacenamientoDTO dto = new AlmacenamientoDTO();
-        dto.setProducto(producto);
-        dto.setCantidad(cantidad);
-        dto.setFechaIngreso(fechaIngreso);
-        return service.registrar(dto);
-    }
+
+   
 
     public List<AlmacenamientoDTO> listarInventario() {
         return service.listar();
