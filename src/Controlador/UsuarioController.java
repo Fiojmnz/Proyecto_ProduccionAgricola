@@ -31,8 +31,21 @@ public class UsuarioController {
         dto.setRol(rol);
         return service.registrar(dto);
     }
+    
+    public boolean existeUsername(String username) {
+    return service.existeUsername(username);
+}
+public UsuarioDTO buscarPorUsername(String username) {
+    return service.buscarPorUsername(username);
+}
 
-    public List<UsuarioDTO> listarUsuarios() {
+    public List<UsuarioDTO> listarUsuario() {
         return service.listar();
     }
+    
+   public boolean eliminarUsuario(String username) {
+    return service.eliminar(username);
+}
+
+
 }
