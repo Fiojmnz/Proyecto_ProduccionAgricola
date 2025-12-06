@@ -4,7 +4,7 @@
  */
 package Modelo;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 /**
  *
@@ -14,8 +14,8 @@ public class AlmacenamientoDTO {
     private int id;
     private String producto;
     private double cantidad;
-    private LocalDate fechaIngreso;
-    private LocalDate fechaEgreso;
+    private Date fechaIngreso;
+    private Date fechaEgreso;
 
     public int getId() {
         return id;
@@ -29,13 +29,15 @@ public class AlmacenamientoDTO {
         return cantidad;
     }
 
-    public LocalDate getFechaIngreso() {
+    public Date getFechaIngreso() {
         return fechaIngreso;
     }
 
-    public LocalDate getFechaEgreso() {
+    public Date getFechaEgreso() {
         return fechaEgreso;
     }
+
+    
 
     public void setId(int id) {
         this.id = id;
@@ -49,12 +51,14 @@ public class AlmacenamientoDTO {
         this.cantidad = cantidad;
     }
 
-    public void setFechaIngreso(LocalDate fechaIngreso) {
+    public void setFechaIngreso(Date fechaIngreso) {
         this.fechaIngreso = fechaIngreso;
     }
 
-    public void setFechaEgreso(LocalDate fechaEgreso) {
+    public void setFechaEgreso(Date fechaEgreso) {
         this.fechaEgreso = fechaEgreso;
     }
+
+   
 
 }
