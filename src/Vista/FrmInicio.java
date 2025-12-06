@@ -5,7 +5,7 @@
 package Vista;
 
 import Enum.Rol;
-
+import Vista.FrmLogin;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,7 +13,6 @@ import javax.swing.JOptionPane;
  * @author AsusVivobook
  */
 public class FrmInicio extends javax.swing.JFrame {
-         
     private String username;
     private Rol rol;
 
@@ -23,16 +22,19 @@ public class FrmInicio extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
 
-    jLabel1.setText("Usuario: " + username);
+        jLabel1.setText("Usuario: " + username);
 
-    if (rol != Rol.ADMINISTRADOR) {
-        btnUsuario.setEnabled(false);
+        if (rol != Rol.ADMINISTRADOR) {
+            btnUsuario.setEnabled(false);
+        }
     }
-} 
 
-    private FrmInicio() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+    public FrmInicio() {
+        this("Sesión Cerrada/Nula", Rol.ADMINISTRADOR); 
     }
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -220,40 +222,31 @@ public class FrmInicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCerrarSeccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSeccionActionPerformed
-        
-        int op = JOptionPane.showConfirmDialog(
-                this,
-                "¿Desea cerrar sesión?",
-                "Confirmar",
-                JOptionPane.YES_NO_OPTION
-        );
-
-        if (op == JOptionPane.YES_OPTION) {
-            new FrmLogin().setVisible(true);
-            this.dispose();
-        }
-    
+        int op = JOptionPane.showConfirmDialog(this, "¿Desea cerrar sesión?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (op == JOptionPane.YES_OPTION) {
+           new FrmLogin().setVisible(true);
+                this.dispose();
+}
     }//GEN-LAST:event_btnCerrarSeccionActionPerformed
 
     private void btnTrabajadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrabajadorActionPerformed
-     
+         new FrmTrabajador(this.username, this.rol).setVisible(true);
     }//GEN-LAST:event_btnTrabajadorActionPerformed
 
     private void btnProduccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProduccionActionPerformed
-       
-
+       new FrmProduccion(this.username, this.rol).setVisible(true);
     }//GEN-LAST:event_btnProduccionActionPerformed
 
     private void btnAlmacenamientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlmacenamientoActionPerformed
-       
+       new FrmAlmacenamiento(this.username, this.rol).setVisible(true);
     }//GEN-LAST:event_btnAlmacenamientoActionPerformed
 
     private void btnCultivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCultivoActionPerformed
-      
+      new FrmCultivo(this.username, this.rol).setVisible(true);
     }//GEN-LAST:event_btnCultivoActionPerformed
 
     private void btnUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuarioActionPerformed
-       new FrmUsuario().setVisible(true);
+     new FrmUsuario(this.username, this.rol).setVisible(true);
     }//GEN-LAST:event_btnUsuarioActionPerformed
 
     /**
