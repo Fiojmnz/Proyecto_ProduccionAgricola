@@ -3,20 +3,47 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
-
+import javax.swing.JOptionPane;
+import Controlador.UsuarioController;
+import DAO.UsuarioDAO;
+import DB.ConnectionFactory;
+import Enum.Rol;
+import Modelo.Usuario;
+import Seguridad.AdministradorAuntenticacion;
+import Validaciones.EncriptadorContrasena;
+import Vista.FrmInicio;
+import java.sql.SQLException;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
 /**
  *
  * @author AsusVivobook
  */
 public class FrmLogin extends javax.swing.JFrame {
-
+    private UsuarioController controller;
     /**
      * Creates new form FrmLogin
      */
+    
     public FrmLogin() {
         initComponents();
-    }
+         CargarRoles();
+        setLocationRelativeTo(null); // Centrar ventana
 
+        try {
+            controller = new UsuarioController();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this,
+                "Error al conectar con la base de datos: " + ex.getMessage());
+        }
+    }
+    private void CargarRoles() {
+    jComboBox1.removeAllItems(); 
+
+    for (Rol r : Rol.values()) {
+        jComboBox1.addItem(r.name());
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,6 +61,9 @@ public class FrmLogin extends javax.swing.JFrame {
         btnCancelar = new javax.swing.JButton();
         jPasswordField1 = new javax.swing.JPasswordField();
         jTextField1 = new javax.swing.JTextField();
+        txtROL = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        btnCrearUsuario = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -50,17 +80,41 @@ public class FrmLogin extends javax.swing.JFrame {
         btnAgregar.setBackground(new java.awt.Color(102, 255, 102));
         btnAgregar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
-        btnAgregar.setText("Agregar");
+        btnAgregar.setText("Iniciar Seccion");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setBackground(new java.awt.Color(255, 51, 51));
         btnCancelar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         jPasswordField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jPasswordField1.setText("jPasswordField1");
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        txtROL.setText("ROL");
+
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
+        btnCrearUsuario.setText("CrearUsuario");
+        btnCrearUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearUsuarioActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -69,9 +123,11 @@ public class FrmLogin extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(142, 142, 142)
+                        .addGap(44, 44, 44)
+                        .addComponent(btnCrearUsuario)
+                        .addGap(58, 58, 58)
                         .addComponent(btnAgregar)
-                        .addGap(110, 110, 110)
+                        .addGap(75, 75, 75)
                         .addComponent(btnCancelar))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(242, 242, 242)
@@ -79,15 +135,15 @@ public class FrmLogin extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(89, 89, 89)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(58, 58, 58)
-                                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(175, Short.MAX_VALUE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                            .addComponent(txtROL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(65, 65, 65)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPasswordField1)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(107, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -98,14 +154,19 @@ public class FrmLogin extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(88, 88, 88)
+                .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtROL, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar)
-                    .addComponent(btnCancelar))
+                    .addComponent(btnCancelar)
+                    .addComponent(btnCrearUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(61, 61, 61))
         );
 
@@ -122,6 +183,114 @@ public class FrmLogin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+          String user = jTextField1.getText().trim();
+    String pass = new String(jPasswordField1.getPassword()).trim();
+
+    if (user.isEmpty() || pass.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Debe ingresar usuario y contraseña");
+        return;
+    }
+
+    try {
+
+        boolean ok = AdministradorAuntenticacion.getInstancia().login(user, pass);
+
+        if (!ok) {
+            JOptionPane.showMessageDialog(this, "Credenciales incorrectas");
+            return;
+        }
+
+        JOptionPane.showMessageDialog(this, "Bienvenido " + user);
+
+        String username = AdministradorAuntenticacion.getInstancia()
+                              .getUsuarioActual().getUsername();
+
+        Rol rol = AdministradorAuntenticacion.getInstancia().getRol();
+
+        FrmInicio inicio = new FrmInicio(username, rol);
+        inicio.setVisible(true);
+
+        this.dispose();
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, 
+            "Error al iniciar sesión: " + ex.getMessage());
+    }
+
+    
+
+                                
+      
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        jTextField1.setText("");
+        jPasswordField1.setText("");
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void btnCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearUsuarioActionPerformed
+        JTextField txtUser = new JTextField();
+    JTextField txtPass = new JTextField();
+
+    JComboBox<Rol> cmbRol = new JComboBox<>(Rol.values());
+
+    Object[] campos = {
+        "Usuario:", txtUser,
+        "Contraseña:", txtPass,
+        "Rol:", cmbRol
+    };
+
+    int opcion = JOptionPane.showConfirmDialog(
+            this, campos, "Crear nuevo usuario",
+            JOptionPane.OK_CANCEL_OPTION);
+
+    if (opcion != JOptionPane.OK_OPTION) {
+        return;
+    }
+
+    String user = txtUser.getText().trim();
+    String pass = txtPass.getText().trim();
+    Rol rolSeleccionado = (Rol) cmbRol.getSelectedItem();
+
+    if (user.isEmpty() || pass.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Debe llenar todos los campos");
+        return;
+    }
+
+    try {
+        UsuarioDAO dao = new UsuarioDAO(ConnectionFactory.getInstancia().getConnection());
+
+        if (dao.existeUsername(user)) {
+            JOptionPane.showMessageDialog(this, "Ese usuario ya existe");
+            return;
+        }
+
+        Usuario nuevo = new Usuario();
+        nuevo.setUsername(user);
+        nuevo.setPasswordHash(EncriptadorContrasena.hash(pass));  
+        nuevo.setRol(rolSeleccionado);
+        nuevo.setActivo(true);
+
+        dao.agregar(nuevo);
+
+        JOptionPane.showMessageDialog(this,
+                "Usuario creado con éxito. Ahora puedes iniciar sesión.");
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this,
+                "Error al crear usuario:\n" + ex.getMessage());
+    }
+
+     
+    }//GEN-LAST:event_btnCrearUsuarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -161,11 +330,14 @@ public class FrmLogin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnCrearUsuario;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel txtROL;
     // End of variables declaration//GEN-END:variables
 }
