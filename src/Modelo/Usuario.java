@@ -13,7 +13,7 @@ import Enum.Rol;
 public class Usuario {
     private Long id;
     private String username;
-    private String encriptadorContraseña;
+    private String encriptadorContrasena;
     private Rol rol;
     private boolean activo;
 
@@ -26,8 +26,14 @@ public class Usuario {
     }
 
     public String getPasswordHash() {
-        return encriptadorContraseña;
+        return encriptadorContrasena;
     }
+
+    public String getEncriptadorContraseña() {
+        return encriptadorContrasena;
+    }
+
+   
 
     public Rol getRol() {
         return rol;
@@ -46,8 +52,14 @@ public class Usuario {
     }
 
     public void setPasswordHash(String passwordHash) {
-        this.encriptadorContraseña = passwordHash;
+        this.encriptadorContrasena = passwordHash;
     }
+
+    public void setEncriptadorContraseña(String encriptadorContraseña) {
+        this.encriptadorContrasena = encriptadorContraseña;
+    }
+
+    
 
     public void setRol(Rol rol) {
         this.rol = rol;
