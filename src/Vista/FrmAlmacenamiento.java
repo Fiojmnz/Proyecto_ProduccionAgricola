@@ -347,7 +347,7 @@ public class FrmAlmacenamiento extends javax.swing.JFrame {
     }//GEN-LAST:event_btnlimpiarActionPerformed
 
     private void btnlistarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlistarActionPerformed
-      new JPanelAlmacenamiento().setVisible(true);
+      new FrmListaAlmacenamiento().setVisible(true);
     }//GEN-LAST:event_btnlistarActionPerformed
 
     private void txtFechaEgresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaEgresoActionPerformed
