@@ -98,10 +98,10 @@ public class FrmProduccion extends javax.swing.JFrame {
         jLabel13.setText("Cantidad:");
 
         jLabel14.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
-        jLabel14.setText("Calidad");
+        jLabel14.setText("Calidad:");
 
         jLabel15.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
-        jLabel15.setText("Destino");
+        jLabel15.setText("Destino:");
 
         btnagregar.setBackground(new java.awt.Color(102, 255, 102));
         btnagregar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
@@ -165,6 +165,9 @@ public class FrmProduccion extends javax.swing.JFrame {
 
         jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        jButton1.setBackground(new java.awt.Color(102, 102, 102));
+        jButton1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("GenerarReporte");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
