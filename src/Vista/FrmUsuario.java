@@ -204,7 +204,7 @@ private String username;
                                         .addComponent(jCheckBox2))
                                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(238, 238, 238)
+                        .addGap(278, 278, 278)
                         .addComponent(btnVerTabla)))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
@@ -241,9 +241,9 @@ private String username;
                     .addComponent(btnEliminar)
                     .addComponent(btnBuscarUsername)
                     .addComponent(btnSalir))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addComponent(btnVerTabla)
-                .addContainerGap())
+                .addGap(19, 19, 19))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
