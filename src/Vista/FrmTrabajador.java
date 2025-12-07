@@ -112,7 +112,7 @@ private void limpiarCampos() {
         jLabel7.setText("Correo:");
 
         Horario.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
-        Horario.setText("Horario");
+        Horario.setText("Horario:");
 
         btnAgregar.setBackground(new java.awt.Color(0, 204, 153));
         btnAgregar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
@@ -177,8 +177,8 @@ private void limpiarCampos() {
             }
         });
 
-        Salario.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        Salario.setText("Salario");
+        Salario.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        Salario.setText("Salario:");
 
         txtSalario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -251,13 +251,13 @@ private void limpiarCampos() {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(2, 2, 2)
                         .addComponent(jLabel4)
-                        .addGap(9, 9, 9)
+                        .addGap(21, 21, 21)
                         .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel7)
+                        .addComponent(jLabel6)
                         .addGap(18, 18, 18)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Horario))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -404,7 +404,7 @@ private void limpiarCampos() {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnVerTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerTablaActionPerformed
-        new JPanelTrabajador().setVisible(true);
+        new FrmListaTrabajador().setVisible(true);
     }//GEN-LAST:event_btnVerTablaActionPerformed
 
     private void txtHorarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHorarioActionPerformed
