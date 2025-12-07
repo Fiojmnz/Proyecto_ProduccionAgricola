@@ -462,7 +462,7 @@ private java.sql.Date convertirFecha(String texto) throws Exception {
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnVerTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerTablaActionPerformed
-        new JPanelCultivo().setVisible(true);
+        new FrmListaCultivo().setVisible(true);
     }//GEN-LAST:event_btnVerTablaActionPerformed
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
