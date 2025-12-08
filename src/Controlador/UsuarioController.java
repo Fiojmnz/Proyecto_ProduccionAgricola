@@ -38,11 +38,10 @@ public class UsuarioController {
 public UsuarioDTO buscarPorUsername(String username) {
     return service.buscarPorUsername(username);
 }
-
-    public List<UsuarioDTO> listarUsuario() {
-        return service.listar();
-    }
-    
+public List<UsuarioDTO> listarUsuario() throws SQLException {
+    return service.listar();   
+}
+  
    public boolean eliminarUsuario(String username) {
     return service.eliminar(username);
 }
