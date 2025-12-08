@@ -16,11 +16,12 @@ public class Trabajador {
     private String puesto;
     private String horario;
     private double salario;
+    private int id;
 
     public Trabajador() {    
     }
 
-    public Trabajador(String cedula, String nombre, String telefono, String correo, String puesto, String horario, double salario) {
+    public Trabajador(String cedula, String nombre, String telefono, String correo, String puesto, String horario, double salario, int id) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.telefono = telefono;
@@ -28,6 +29,7 @@ public class Trabajador {
         this.puesto = puesto;
         this.horario = horario;
         this.salario = salario;
+        this.id = id;
     }
 
     public String getCedula() {
@@ -58,6 +60,10 @@ public class Trabajador {
         return salario;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public void setCedula(String cedula) {
         this.cedula = cedula;
     }
@@ -86,9 +92,8 @@ public class Trabajador {
         this.salario = salario;
     }
 
-    @Override
-    public String toString() {
-        return "Trabajador{" + "cedula='" + cedula + '\'' + ", nombre='" + nombre + '\'' + ", telefono='" + telefono + '\'' + ", correo='" + correo + '\'' + ", puesto='" + puesto + '\'' + ", horario='" + horario + '\'' + ", salario=" + salario + '}';
+    public void setId(int id) {
+        this.id = id;
     }
-}
 
+}

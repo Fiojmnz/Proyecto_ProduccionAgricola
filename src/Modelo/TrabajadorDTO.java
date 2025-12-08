@@ -16,6 +16,7 @@ public class TrabajadorDTO {
     private String puesto;
     private String horario;
     private double salario;
+    private int id;
 
     public String getCedula() {
         return cedula;
@@ -45,6 +46,10 @@ public class TrabajadorDTO {
         return salario;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public void setCedula(String cedula) {
         this.cedula = cedula;
     }
@@ -72,4 +77,9 @@ public class TrabajadorDTO {
     public void setSalario(double salario) {
         this.salario = salario;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }
