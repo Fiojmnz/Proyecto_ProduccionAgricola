@@ -21,45 +21,50 @@ public class AlmacenamientoDAO {
         this.conn = conn;
     }
 
-    public boolean agregar(Almacenamiento a) {
-        String sql = "INSERT INTO almacenamiento(producto, cantidad, fecha_ingreso) VALUES (?,?,?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, a.getProducto());
-            ps.setDouble(2, a.getCantidad());
-            ps.setDate(3, a.getFechaIngreso());
-            ps.executeUpdate();
+public Almacenamiento agregar(Almacenamiento a) {  
+    String sql = "INSERT INTO almacenamiento (producto, cantidad, fechaIngreso, fechaEgreso) VALUES (?, ?, ?, ?)";
+    try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        ps.setString(1, a.getProducto());
+        ps.setInt(2, (int) a.getCantidad());
+        ps.setDate(3, a.getFechaIngreso());
+        ps.setDate(4, a.getFechaEgreso());
 
+        int filas = ps.executeUpdate();
+        if (filas > 0) {
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    a.setId(rs.getInt(1));
+                    a.setId(rs.getInt(1));  
                 }
             }
-            return true;
-        } catch (SQLException e) {
-            throw new RuntimeException("Error al agregar almacenamiento", e);
         }
+        return a;  
+    } catch (SQLException e) {
+        throw new RuntimeException("Error al agregar almacenamiento", e);
     }
+}
 
     public List<Almacenamiento> listar() {
-        String sql = "SELECT * FROM almacenamiento";
+        String sql = "SELECT id, producto, cantidad, fechaIngreso, fechaEgreso FROM almacenamiento";
         List<Almacenamiento> list = new ArrayList<>();
-        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(map(rs));
             }
-            return list;
         } catch (SQLException e) {
             throw new RuntimeException("Error al listar almacenamiento", e);
         }
+        return list;
     }
 
     public boolean actualizar(Almacenamiento a) {
-        String sql = "UPDATE almacenamiento SET producto=?, cantidad=?, fecha_ingreso=? WHERE id=?";
+        String sql = "UPDATE almacenamiento SET producto=?, cantidad=?, fechaIngreso=?, fechaEgreso=? WHERE id=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, a.getProducto());
-            ps.setDouble(2,  a.getCantidad());
+            ps.setDouble(2, a.getCantidad());  
             ps.setDate(3, a.getFechaIngreso());
-            ps.setInt(4, a.getId());
+            ps.setDate(4, a.getFechaEgreso());
+            ps.setInt(5, a.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new RuntimeException("Error al actualizar almacenamiento", e);
@@ -80,10 +85,9 @@ public class AlmacenamientoDAO {
         Almacenamiento a = new Almacenamiento();
         a.setId(rs.getInt("id"));
         a.setProducto(rs.getString("producto"));
-        a.setCantidad(rs.getDouble("cantidad")); 
-       a.setFechaIngreso(rs.getDate("fecha_ingreso"));
-       a.setFechaEgreso(rs.getDate("fecha_egreso"));
-
+        a.setCantidad(rs.getDouble("cantidad"));       
+        a.setFechaIngreso(rs.getDate("fechaIngreso"));
+        a.setFechaEgreso(rs.getDate("fechaEgreso"));     
         return a;
     }
 }
