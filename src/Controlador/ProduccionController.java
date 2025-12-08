@@ -5,6 +5,8 @@
 package Controlador;
 import DAO.ProduccionDAO;
 import DB.ConnectionFactory;
+import Enum.Destino;
+import Modelo.Produccion;
 import Modelo.ProduccionDTO;
 import Servicios.ProduccionServicios;
 
@@ -28,13 +30,21 @@ public class ProduccionController {
         Connection conn = ConnectionFactory.getInstancia().getConnection();
         this.service = new ProduccionServicios(new ProduccionDAO(conn));
     }
-    public ProduccionDTO registrarProduccion(Date fecha, double cantidad, String calidad, String destino) {
-        ProduccionDTO dto = new ProduccionDTO();
-        dto.setFecha(fecha);
-        dto.setCantidadRecolectada(cantidad);
-        dto.setCalidad(calidad);
-        dto.setDestino(destino);
-        return service.registrar(dto);
+ public boolean registrarProduccion(Date fecha, double cantidad, String calidad, Destino destino, int idCultivo) {
+        Produccion p = new Produccion();
+        p.setFecha(fecha);
+        p.setCantidadRecolectada(cantidad);
+        p.setCalidad(calidad);
+        p.setDestino(destino.name());
+        p.setIdCultivo(idCultivo);
+
+        try {
+            return service.agregar(p); 
+        } catch (Exception e) {
+            System.err.println("ERROR AL REGISTRAR PRODUCCIÓN:");
+         
+            return false;
+        }
     }
 
     public List<ProduccionDTO> listarProduccion() {
