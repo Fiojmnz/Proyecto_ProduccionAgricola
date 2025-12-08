@@ -20,7 +20,7 @@ public class ConnectionFactory {
 
     private static ConnectionFactory instancia;
 
-    private  ConnectionFactory() {
+    public  ConnectionFactory() {
     }
     
      public static synchronized ConnectionFactory getInstancia() {
