@@ -4,18 +4,110 @@
  */
 package Vista;
 
+import Controlador.UsuarioController;
+import Enum.Rol;
+import Modelo.UsuarioDTO;
+import java.util.List;
+import javax.swing.JOptionPane;
+import Modelo.Usuario;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author AsusVivobook
  */
 public class FrmListaUsuario extends javax.swing.JFrame {
+private UsuarioController controller;
+private String username;
+private Rol rol;
 
-    /**
-     * Creates new form FrmListaUsuario
-     */
-    public FrmListaUsuario() {
-        initComponents();
+
+public FrmListaUsuario(String username, Rol rol) {
+    this();
+    this.username = username;
+    this.rol = rol;
+}
+
+public FrmListaUsuario() {
+    initComponents();
+    this.setLocationRelativeTo(null);
+    this.setTitle("Lista de Usuarios del Sistema");
+ 
+    try {
+        controller = new UsuarioController();
+        cargarDesdeTabla();
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Error al cargar usuarios: " + ex.getMessage());
     }
+    
+
+    jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            jTable1MouseClicked(evt);
+        }
+    });
+}
+
+
+private void cargarDesdeTabla() {
+    try {
+     
+        UsuarioController uc = new UsuarioController();
+        List<UsuarioDTO> lista = uc.listarUsuario(); 
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.setColumnIdentifiers(new String[]{
+            "ID", "Usuario", "Contraseña (Hash)", "Rol", "Activo"
+        });
+
+       
+       for (UsuarioDTO dto : lista) {
+    modelo.addRow(new Object[]{
+       
+        String.valueOf(dto.getId()), 
+        dto.getUsername(),
+        "******", // Contraseña
+        dto.getRol().name(),
+      
+        dto.isActivo() ? "Activo" : "Inactivo"
+    });
+}
+     
+
+        jTable1.setModel(modelo);
+        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al cargar la lista: " + e.getMessage());
+    }
+}
+
+
+private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
+    if (evt.getClickCount() == 2) { 
+        int fila = jTable1.getSelectedRow();
+        if (fila == -1) return;
+
+        try {
+            DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+            String usernameSeleccionado = (String) modelo.getValueAt(fila, 1);
+        
+            UsuarioController uc = new UsuarioController();
+            UsuarioDTO dto = uc.buscarPorUsername(usernameSeleccionado); 
+            
+            if (dto != null) {
+             
+                FrmUsuario formGestion = new FrmUsuario();
+                formGestion.cargarDesdeTabla(dto); 
+                
+                formGestion.setVisible(true);
+                this.dispose(); 
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al abrir para edición: " + e.getMessage());
+        }
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -16,52 +16,56 @@ import Vista.FrmInicio;
  * @author gipsy
  */
 public class FrmAlmacenamiento extends javax.swing.JFrame {
-     private AlmacenamientoController controller;
-     private String username; 
-     private Rol rol;
+    private AlmacenamientoController controller;
+   
+	private String username;
+	private Rol rol;
+
 
     public FrmAlmacenamiento(String username, Rol rol) {
-        this(); // Llama al constructor vacío para inicializar componentes y controlador
+        this(); 
         this.username = username;
         this.rol = rol;
     }
+ 
 
-   public FrmAlmacenamiento() {
-     initComponents();
-     setLocationRelativeTo(null);
+	public FrmAlmacenamiento() {
+		initComponents();
+		setLocationRelativeTo(null);
 
-   try {
-    controller = new AlmacenamientoController();
-    } catch (SQLException ex) {
-    JOptionPane.showMessageDialog(this, "Error al conectar: " + ex.getMessage());
-}
-}
+		try {
+			controller = new AlmacenamientoController();
+		} catch (SQLException ex) {
+			JOptionPane.showMessageDialog(this, "Error al conectar: " + ex.getMessage());
+		}
+	}
 
-    private void limpiarCampos() {
-        txtId.setText("");
-        txtProducto.setText("");
-        txtCantidad.setText("");
-        txtFechaIngreso.setText("");
-        txtFechaEgreso.setText("");
-    }
+	private void limpiarCampos() {
+		txtId.setText("");
+		txtProducto.setText("");
+		txtCantidad.setText("");
+		txtFechaIngreso.setText("");
+		txtFechaEgreso.setText("");
+	}
 
-    private java.sql.Date convertirFecha(String texto) throws Exception {
-        texto = texto.trim(); 
+  
+	private java.sql.Date convertirFecha(String texto) throws Exception {
+		texto = texto.trim();
 
-        java.text.SimpleDateFormat formato = new java.text.SimpleDateFormat("yyyy-MM-dd");
-        formato.setLenient(false); 
+		java.text.SimpleDateFormat formato = new java.text.SimpleDateFormat("yyyy-MM-dd");
+		formato.setLenient(false);
 
-        java.util.Date fecha = formato.parse(texto);
-        return new java.sql.Date(fecha.getTime());
-    }
-
-    public void cargarDesdeTabla(AlmacenamientoDTO dto) {
-        txtId.setText(String.valueOf(dto.getId()));
-        txtProducto.setText(dto.getProducto());
-        txtCantidad.setText(String.valueOf(dto.getCantidad()));
-        txtFechaIngreso.setText(String.valueOf(dto.getFechaIngreso()));
-        txtFechaEgreso.setText(String.valueOf(dto.getFechaEgreso()));
-    }
+		java.util.Date fecha = formato.parse(texto);
+		return new java.sql.Date(fecha.getTime());
+	}
+   
+	public void cargarDesdeTabla(AlmacenamientoDTO dto) {
+		txtId.setText(String.valueOf(dto.getId()));
+		txtProducto.setText(dto.getProducto());
+		txtCantidad.setText(String.valueOf(dto.getCantidad()));
+		txtFechaIngreso.setText(String.valueOf(dto.getFechaIngreso()));
+		txtFechaEgreso.setText(String.valueOf(dto.getFechaEgreso()));
+	}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -196,14 +200,14 @@ public class FrmAlmacenamiento extends javax.swing.JFrame {
                 .addGap(21, 21, 21))
         );
 
-        txtFechaIngreso.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd "))));
+        txtFechaIngreso.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat(""))));
         txtFechaIngreso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtFechaIngresoActionPerformed(evt);
             }
         });
 
-        txtFechaEgreso.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd "))));
+        txtFechaEgreso.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd"))));
         txtFechaEgreso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtFechaEgresoActionPerformed(evt);
@@ -292,28 +296,91 @@ public class FrmAlmacenamiento extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnactualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnactualizarActionPerformed
-        // TODO add your handling code here:
+      try {
+           
+            String idText = txtId.getText().trim();
+            String producto = txtProducto.getText().trim();
+            String cantidadText = txtCantidad.getText().trim();
+            String fechaIngresoText = txtFechaIngreso.getText().trim();
+            String fechaEgresoText = txtFechaEgreso.getText().trim(); 
+
+            if (idText.isEmpty() || producto.isEmpty() || cantidadText.isEmpty() || fechaIngresoText.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "ID, Producto, Cantidad y Fecha de Ingreso son obligatorios para actualizar.");
+                return;
+            }
+
+            int id = Integer.parseInt(idText);
+            int cantidad = Integer.parseInt(cantidadText);
+            
+            java.sql.Date fechaIngreso = convertirFecha(fechaIngresoText);
+       
+            java.sql.Date fechaEgreso = null;
+            if (!fechaEgresoText.isEmpty()) {
+                 fechaEgreso = convertirFecha(fechaEgresoText);
+            }
+
+            AlmacenamientoDTO dto = new AlmacenamientoDTO();
+            dto.setId(id);
+            dto.setProducto(producto);
+            dto.setCantidad(cantidad);
+            dto.setFechaIngreso(fechaIngreso);
+            dto.setFechaEgreso(fechaEgreso);
+
+            if (controller.actualizarAlmacenamiento(dto)) {
+                JOptionPane.showMessageDialog(this, "Registro actualizado correctamente.");
+                limpiarCampos();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo actualizar (ID no encontrado o datos idénticos).");
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Error: ID y Cantidad deben ser valores numéricos válidos.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al actualizar: Verifique el formato de la fecha (yyyy-MM-dd) o la existencia del ID: " + e.getMessage());
+        }
     }//GEN-LAST:event_btnactualizarActionPerformed
 
     private void btnagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnagregarActionPerformed
-        try {
-        String producto = txtProducto.getText();
-        int cantidad = Integer.parseInt(txtCantidad.getText());
+    
+    String producto = txtProducto.getText().trim();
+    String cantidadText = txtCantidad.getText().trim();
+    String fechaIngresoText = txtFechaIngreso.getText().trim();
+    String fechaEgresoText = txtFechaEgreso.getText().trim();
 
+   
+    if (producto.isEmpty() || cantidadText.isEmpty() || fechaIngresoText.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Producto, Cantidad y Fecha de Ingreso son obligatorios.");
+        return;
+    }
+
+    try {
         
-        Date fechaIngreso = convertirFecha(txtFechaIngreso.getText());
-        Date fechaEgreso = convertirFecha(txtFechaEgreso.getText());
+        int cantidad = Integer.parseInt(cantidadText);
+        
+        
+        java.sql.Date fechaIngreso = convertirFecha(fechaIngresoText);
+        
+    
+        java.sql.Date fechaEgreso = null;
+        if (!fechaEgresoText.isEmpty()) {
+             fechaEgreso = convertirFecha(fechaEgresoText);
+        }
 
-       
+      
         controller.registrarAlmacenamiento(producto, cantidad, fechaIngreso, fechaEgreso);
 
         JOptionPane.showMessageDialog(this, "Agregado correctamente");
         limpiarCampos();
 
+    } catch (NumberFormatException e) {
+    
+        JOptionPane.showMessageDialog(this, "Error: La Cantidad debe ser un número entero válido.");
+        
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error al agregar: " + e.getMessage());
+       
+        JOptionPane.showMessageDialog(this, "Error al agregar: Verifique el formato de la fecha (debe ser YYYY-MM-DD) o las restricciones de la DB: " + e.getMessage());
     }
-
+    
    
     }//GEN-LAST:event_btnagregarActionPerformed
 

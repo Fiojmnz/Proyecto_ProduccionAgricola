@@ -4,17 +4,120 @@
  */
 package Vista;
 
+import Controlador.CultivoController;
+import Enum.EstadoCrecimiento;
+import Enum.Rol;
+import Enum.TipoCultivo;
+import Modelo.CultivoDTO;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author AsusVivobook
  */
 public class FrmListaCultivo extends javax.swing.JFrame {
+private CultivoController controller;
+    private String username;
+    private Rol rol;
 
-    /**
-     * Creates new form FrmListaCultivo
-     */
+ 
+    public FrmListaCultivo(String username, Rol rol) {
+        this();
+        this.username = username;
+        this.rol = rol;
+    }
+
+
     public FrmListaCultivo() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        this.setTitle("Lista de Cultivos Registrados");
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+
+        try {
+            controller = new CultivoController();
+            cargarTablaCultivos();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al conectar o cargar datos: " + ex.getMessage());
+        }
+
+        jTable1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
+    }
+
+    
+    private void cargarTablaCultivos() {
+        try {
+            List<CultivoDTO> lista = controller.listarCultivos(username); 
+
+            DefaultTableModel modelo = new DefaultTableModel();
+            modelo.setColumnIdentifiers(new String[]{
+                "Id", "Nombre", "Area Sembrada", "Fecha Siembra", "Fecha Cosecha", "Tipo", "Estado"
+            });
+
+            for (CultivoDTO dto : lista) {
+                modelo.addRow(new Object[]{
+                    dto.getId(),
+                    dto.getNombre(),
+                    dto.getAreaSembrada(),
+                    dto.getFechaSiembra(),
+                    dto.getFechaCosecha(),
+                    dto.getTipo().name(),
+                    dto.getEstadoCrecimiento().name()
+                });
+            }
+
+            jTable1.setModel(modelo);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al llenar la tabla: " + e.getMessage());
+        }
+    }
+   
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
+        if (evt.getClickCount() == 2) { 
+            
+            int fila = jTable1.getSelectedRow();
+            if (fila == -1) return;
+
+            try {
+                DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+
+                CultivoDTO dto = new CultivoDTO();
+                
+                dto.setId((Integer) modelo.getValueAt(fila, 0)); 
+                dto.setNombre((String) modelo.getValueAt(fila, 1));
+                dto.setAreaSembrada(Double.parseDouble(modelo.getValueAt(fila, 2).toString())); 
+                
+             
+                dto.setFechaSiembra((java.sql.Date) modelo.getValueAt(fila, 3));
+                dto.setFechaCosecha((java.sql.Date) modelo.getValueAt(fila, 4));
+                
+         
+                dto.setTipo(TipoCultivo.valueOf((String) modelo.getValueAt(fila, 5)));
+                dto.setEstadoCrecimiento(EstadoCrecimiento.valueOf((String) modelo.getValueAt(fila, 6)));
+
+            
+                FrmCultivo formGestion = new FrmCultivo();
+                formGestion.cargarDesdeTabla(dto);
+                
+                formGestion.setVisible(true);
+                this.dispose(); 
+                
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al cargar el registro para edición: " + e.getMessage());
+            }
+        }
     }
 
     /**

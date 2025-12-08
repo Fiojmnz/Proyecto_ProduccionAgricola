@@ -43,6 +43,20 @@ public class FrmCultivo extends javax.swing.JFrame {
 
         CargarCombos();
     }
+    public void cargarDesdeTabla(Modelo.CultivoDTO dto) {
+ 
+    txtId.setText(String.valueOf(dto.getId())); 
+    txtNombre.setText(dto.getNombre());
+    txtAreaSembrada.setText(String.valueOf(dto.getAreaSembrada()));
+    
+  
+    txtFechaSiembra.setText(dto.getFechaSiembra() != null ? dto.getFechaSiembra().toString() : "");
+    txtFechaCosecha.setText(dto.getFechaCosecha() != null ? dto.getFechaCosecha().toString() : "");
+
+ 
+    cbTipo.setSelectedItem(dto.getTipo().name());
+    cbEstado.setSelectedItem(dto.getEstadoCrecimiento().name());
+}
 private void CargarCombos() {
     cbTipo.removeAllItems();
     for (TipoCultivo tipo : TipoCultivo.values()) {
@@ -175,7 +189,7 @@ private java.sql.Date convertirFecha(String texto) throws Exception {
 
         cbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        txtFechaSiembra.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd "))));
+        txtFechaSiembra.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat(""))));
         txtFechaSiembra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtFechaSiembraActionPerformed(evt);

@@ -14,6 +14,16 @@ public class UsuarioDTO {
     private String username;
     private String password;
     private Rol rol;
+    private boolean activo;
+    private Long id;
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public String getUsername() {
         return username;
@@ -38,4 +48,13 @@ public class UsuarioDTO {
     public void setRol(Rol rol) {
         this.rol = rol;
     }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
 }

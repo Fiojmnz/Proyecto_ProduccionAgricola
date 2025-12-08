@@ -4,17 +4,119 @@
  */
 package Vista;
 
+import Controlador.TrabajadorController;
+import Enum.Rol;
+import Modelo.TrabajadorDTO;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import java.sql.SQLException;
+
 /**
  *
  * @author AsusVivobook
  */
 public class FrmListaTrabajador extends javax.swing.JFrame {
+private TrabajadorController controller;
+    private String username;
+    private Rol rol;
 
-    /**
-     * Creates new form FrmListaTrabajador
-     */
+    public FrmListaTrabajador(String username, Rol rol) {
+        this();
+        this.username = username;
+        this.rol = rol;
+    }
+
+ 
     public FrmListaTrabajador() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        this.setTitle("Lista de Trabajadores Registrados");
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+
+        try {
+            controller = new TrabajadorController();
+            cargarTablaTrabajadores();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al conectar o cargar datos: " + ex.getMessage());
+        }
+
+      
+        jTable1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
+    }
+
+   
+    private void cargarTablaTrabajadores() {
+        try {
+         
+            List<TrabajadorDTO> lista = controller.listarTrabajadores(null); 
+
+            DefaultTableModel modelo = new DefaultTableModel();
+            modelo.setColumnIdentifiers(new String[]{
+                "ID", "Nombre", "Cédula", "Puesto", "Teléfono", "Correo", "Horario", "Salario"
+            });
+
+            for (TrabajadorDTO dto : lista) {
+                modelo.addRow(new Object[]{
+                 
+                    dto.getCedula(),
+                    dto.getNombre(),
+                    dto.getCedula(), 
+                    dto.getPuesto(),
+                    dto.getTelefono(),
+                    dto.getCorreo(),
+                    dto.getHorario(),
+                    dto.getSalario()
+                });
+            }
+           
+            jTable1.setModel(modelo);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al llenar la tabla: " + e.getMessage());
+        }
+    }
+   
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
+        if (evt.getClickCount() == 2) { 
+            
+            int fila = jTable1.getSelectedRow();
+            if (fila == -1) return;
+
+            try {
+                DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+
+                String cedulaSeleccionada = (String) modelo.getValueAt(fila, 2); 
+                
+       
+                TrabajadorDTO dto = new TrabajadorDTO();
+                dto.setCedula(cedulaSeleccionada);
+                
+                FrmTrabajador formGestion = new FrmTrabajador();
+                
+                dto.setNombre((String) modelo.getValueAt(fila, 1));
+                dto.setTelefono((String) modelo.getValueAt(fila, 4));
+                dto.setPuesto((String) modelo.getValueAt(fila, 3));
+                dto.setCorreo((String) modelo.getValueAt(fila, 5));
+                dto.setHorario((String) modelo.getValueAt(fila, 6));
+                dto.setSalario((Double) modelo.getValueAt(fila, 7));
+                formGestion.CargarDesdeTabla(dto); 
+                
+                formGestion.setVisible(true);
+                this.dispose();
+                
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al cargar el registro para edición: " + e.getMessage());
+            }
+        }
     }
 
     /**

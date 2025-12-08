@@ -38,6 +38,16 @@ public class FrmTrabajador extends javax.swing.JFrame {
 JOptionPane.showMessageDialog(this, "Error al conectar: " + e.getMessage());
 }
         }
+    public void CargarDesdeTabla(Modelo.TrabajadorDTO dto) { 
+ 
+    jTextField2.setText(dto.getCedula()); 
+    jTextField1.setText(dto.getNombre());
+    jTextField4.setText(dto.getPuesto());
+    jTextField3.setText(dto.getTelefono());
+    jTextField5.setText(dto.getCorreo());
+    txtHorario.setText(dto.getHorario());
+    txtSalario.setText(String.valueOf(dto.getSalario()));
+}
 
 private void limpiarCampos() {
     jTextField1.setText("");

@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import java.sql.SQLException;
 import java.sql.Date;
 import Enum.Destino;
+import Modelo.Cultivo;
 /**
  *
  * @author AsusVivobook
@@ -46,8 +47,19 @@ public class FrmProduccion extends javax.swing.JFrame {
     for (Destino  destino : Destino.values()) {
         jComboBox1.addItem(destino.name());
     }
-}
+    
+     }
+     
+     public void cargarDesdeTabla(Modelo.ProduccionDTO dto) {
+    jTextField1.setText(String.valueOf(dto.getId())); 
+    jFormattedTextField1.setText(dto.getFecha() != null ? dto.getFecha().toString() : ""); 
 
+    jTextField2.setText(String.valueOf(dto.getCantidadRecolectada())); 
+    jTextField4.setText(dto.getCalidad()); 
+    
+    jComboBox1.setSelectedItem(dto.getDestino()); 
+
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -157,9 +169,16 @@ public class FrmProduccion extends javax.swing.JFrame {
 
         jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd"))));
+
         btnVerTabla.setBackground(new java.awt.Color(255, 255, 153));
         btnVerTabla.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnVerTabla.setText("Ver Tabla");
+        btnVerTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerTablaActionPerformed(evt);
+            }
+        });
 
         jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -378,7 +397,7 @@ public class FrmProduccion extends javax.swing.JFrame {
     }//GEN-LAST:event_btneliminarActionPerformed
 
     private void btnbuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbuscarActionPerformed
-       
+      
     }//GEN-LAST:event_btnbuscarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
@@ -389,6 +408,10 @@ public class FrmProduccion extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void btnVerTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerTablaActionPerformed
+       new FrmListaProduccion().setVisible(true);
+    }//GEN-LAST:event_btnVerTablaActionPerformed
 
     /**
      * @param args the command line arguments

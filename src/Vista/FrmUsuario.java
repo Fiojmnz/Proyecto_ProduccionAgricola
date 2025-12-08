@@ -30,7 +30,15 @@ private String username;
         jComboBox1.removeAllItems();
         for (Rol r : Rol.values()) {
             jComboBox1.addItem(r.name());
+  
+
         }
+    }
+    public void cargarDesdeTabla(Modelo.UsuarioDTO dto) {
+    jTextField1.setText(String.valueOf(dto.getUsername())); 
+    jTextField2.setText(dto.getUsername());
+    jPasswordField1.setText(dto.getPassword()); 
+        
     }
    
 
@@ -372,23 +380,9 @@ private String username;
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnVerTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerTablaActionPerformed
-        try {
-        UsuarioController controller = new UsuarioController();
-        java.util.List<UsuarioDTO> lista = controller.listarUsuario();
-
-        StringBuilder sb = new StringBuilder("USUARIO REGISTRADOS:\n");
-
-        for (UsuarioDTO u : lista) {
-            sb.append("- ").append(u.getUsername())
-              .append(" | Rol: ").append(u.getRol())
-              .append("\n");
-        }
-
-        JOptionPane.showMessageDialog(this, sb.toString());
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-    }
+      FrmListaUsuario listaUsuarios = new FrmListaUsuario();
+    
+    listaUsuarios.setVisible(true);
     }//GEN-LAST:event_btnVerTablaActionPerformed
 
     /**
