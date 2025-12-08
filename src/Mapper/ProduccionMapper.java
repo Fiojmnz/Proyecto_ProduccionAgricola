@@ -19,6 +19,7 @@ public class ProduccionMapper {
         p.setCantidadRecolectada(dto.getCantidadRecolectada());
         p.setCalidad(dto.getCalidad());
         p.setDestino(dto.getDestino());
+        p.setIdCultivo(dto.getIdCultivo());
         return p;
     }
 
@@ -30,6 +31,7 @@ public class ProduccionMapper {
         dto.setCalidad(p.getCalidad());
         dto.setDestino(p.getDestino());
         dto.setProductividad(p.getProductividad());
+        dto.setIdCultivo(p.getIdCultivo());
         return dto;
     }
 }
