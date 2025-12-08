@@ -6,6 +6,7 @@ package DAO;
 
 import Modelo.Usuario;
 import Enum.Rol;
+import Modelo.UsuarioDTO;
 import Validaciones.EncriptadorContrasena;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -69,52 +70,66 @@ public class UsuarioDAO {
         return null;
     }
 
-    public void agregar(Usuario u) {
-    try (PreparedStatement ps = conn.prepareStatement(
-        "INSERT INTO Usuario(username, password, rol, activo) VALUES (?, ?, ?, ?)")) {
-
-        ps.setString(1, u.getUsername());
-        ps.setString(2, u.getPasswordHash());
-        ps.setString(3, u.getRol().name());
-        ps.setBoolean(4, u.isActivo());
-
+    public void agregar(Usuario nuevo) throws SQLException {
+    String sql = "INSERT INTO Usuario(username, password, rol, id) VALUES(?,?,?,?)";
+    
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, nuevo.getUsername());
+        ps.setString(2, nuevo.getPasswordHash());
+        ps.setString(3, nuevo.getRol().toString());
+        ps.setObject(4, nuevo.getId()); 
         ps.executeUpdate();
 
-    } catch (SQLException e) {
-       
-        throw new RuntimeException("Error al insertar Usuario", e);
+        asignarUsuarioATrabajador(nuevo.getUsername(), obtenerIdUsuario(nuevo.getUsername()));
     }
 }
 
+private int obtenerIdUsuario(String username) {
+    String sql = "SELECT id FROM Usuario WHERE username = ? ORDER BY id DESC LIMIT 1";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) return rs.getInt("id");
+    } catch (Exception e) {}
+    return 0;
+}
 
-    public List<Usuario> listar() {
-       List<Usuario> lista = new ArrayList<>();
+private void asignarUsuarioATrabajador(String nombre, int usuarioId) {
+    String sql = "UPDATE trabajadores SET id = ? WHERE nombre = ? AND (id IS NULL OR id = 0)";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, usuarioId);
+        ps.setString(2, nombre);
+        ps.executeUpdate();
+    } catch (Exception e) {}
+}
 
-        String sql = "SELECT * FROM Usuario"; // ← OJO: Usuario
+public List<UsuarioDTO> listarDTO() throws SQLException {
+    List<UsuarioDTO> lista = new ArrayList<>();
 
-        try (Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+    String sql = "SELECT id, username, password, rol, activo FROM Usuario";
 
-            while (rs.next()) {
-                Usuario u = new Usuario();
-                u.setId(rs.getLong("id"));
-                u.setUsername(rs.getString("username"));
-                u.setPasswordHash(rs.getString("password"));
-                u.setRol(Rol.valueOf(rs.getString("rol").toUpperCase()));
-                u.setActivo(rs.getBoolean("activo"));
-                lista.add(u);
-            }
+    try (Statement st = conn.createStatement();
+         ResultSet rs = st.executeQuery(sql)) {
 
-        } catch (SQLException e) {
-           
-            throw new RuntimeException("Error al listar Usuario", e);
+        while (rs.next()) {
+            UsuarioDTO dto = new UsuarioDTO();
+
+            dto.setId(rs.getLong("id"));
+            dto.setUsername(rs.getString("username"));
+            dto.setPassword(rs.getString("password"));
+            dto.setRol(Rol.valueOf(rs.getString("rol")));
+            dto.setActivo(rs.getBoolean("activo"));
+
+            lista.add(dto);
         }
-
-        return lista;
     }
 
+   return lista;
+}
+   
+
     public boolean eliminar(String username) {
-    String sql = "DELETE FROM Usuario WHERE username = ?"; // ← OJO: Usuario
+    String sql = "DELETE FROM Usuario WHERE username = ?"; 
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
