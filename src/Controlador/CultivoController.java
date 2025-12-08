@@ -46,6 +46,7 @@ public class CultivoController {
 
     public List<CultivoDTO> listarCultivos(String filtroNombre) {
         return servicios.listar(filtroNombre);
+       
     }
 
     public boolean actualizarCultivo(CultivoDTO dto) {
