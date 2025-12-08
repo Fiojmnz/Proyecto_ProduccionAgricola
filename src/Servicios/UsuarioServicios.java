@@ -11,6 +11,7 @@ import Mapper.UsuarioMapper;
 import Validaciones.UsuarioValidacion;
 import Validaciones.EncriptadorContrasena;
 import Excepciones.DuplicadoExcepcion;
+import java.sql.SQLException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,19 +28,21 @@ public class UsuarioServicios {
         this.dao = dao;
     }
 
-    public UsuarioDTO registrar(UsuarioDTO dto) {
+   public UsuarioDTO registrar(UsuarioDTO dto) {
         validacion.validarRegistro(dto);
-
         if (dao.existeUsername(dto.getUsername())) {
             throw new DuplicadoExcepcion("El nombre de usuario ya está registrado");
         }
-
         Usuario u = UsuarioMapper.toEntity(dto);
         u.setPasswordHash(EncriptadorContrasena.hash(dto.getPassword()));
         u.setActivo(true);
-
-        dao.agregar(u);
-
+        
+        try {
+            dao.agregar(u);
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al guardar el usuario en la base de datos", e);
+        }
+        
         return UsuarioMapper.toDTO(u);
     }
     public boolean existeUsername(String username) {
@@ -54,10 +57,7 @@ public boolean eliminar(String username) {
 }
 
 
-    public List<UsuarioDTO> listar() {
-        return dao.listar()
-                .stream()
-                .map(UsuarioMapper::toDTO)
-                .collect(Collectors.toList());
-    }
+   public List<UsuarioDTO> listar() throws SQLException {
+    return dao.listarDTO(); 
+}
 }

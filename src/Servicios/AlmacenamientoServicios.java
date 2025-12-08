@@ -12,6 +12,7 @@ import Modelo.Almacenamiento;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,28 +21,49 @@ import java.util.stream.Collectors;
  * @author AsusVivobook
  */
 public class AlmacenamientoServicios {
-    private final AlmacenamientoDAO dao;
-
+   private final AlmacenamientoDAO dao; 
     public AlmacenamientoServicios(Connection conn) {
         this.dao = new AlmacenamientoDAO(conn);
     }
 
     public AlmacenamientoDTO registrar(AlmacenamientoDTO dto) {
-        Almacenamiento a = AlmacenamientoMapper.toEntity(dto);
-        dao.agregar(a);
-        return AlmacenamientoMapper.toDTO(a);
+        Almacenamiento entidad = new Almacenamiento();
+        entidad.setProducto(dto.getProducto());
+        entidad.setCantidad(dto.getCantidad());
+        entidad.setFechaIngreso(dto.getFechaIngreso());
+        entidad.setFechaEgreso(dto.getFechaEgreso());
+
+    
+        entidad = dao.agregar(entidad);
+
+        dto.setId(entidad.getId());
+
+        return dto;
     }
 
     public List<AlmacenamientoDTO> listar() {
         return dao.listar()
                 .stream()
-                .map(AlmacenamientoMapper::toDTO)
+                .map(entidad -> {
+                    AlmacenamientoDTO dto = new AlmacenamientoDTO();
+                    dto.setId(entidad.getId());
+                    dto.setProducto(entidad.getProducto());
+                    dto.setCantidad(entidad.getCantidad());
+                    dto.setFechaIngreso(entidad.getFechaIngreso());
+                    dto.setFechaEgreso(entidad.getFechaEgreso());
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
     public boolean actualizar(AlmacenamientoDTO dto) {
-        Almacenamiento a = AlmacenamientoMapper.toEntity(dto);
-        return dao.actualizar(a);
+        Almacenamiento entidad = new Almacenamiento();
+        entidad.setId(dto.getId());
+        entidad.setProducto(dto.getProducto());
+        entidad.setCantidad(dto.getCantidad());
+        entidad.setFechaIngreso(dto.getFechaIngreso());
+        entidad.setFechaEgreso(dto.getFechaEgreso());
+        return dao.actualizar(entidad);
     }
 
     public boolean eliminar(int id) {

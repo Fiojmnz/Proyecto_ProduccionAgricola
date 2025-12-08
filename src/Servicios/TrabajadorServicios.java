@@ -21,12 +21,14 @@ public class TrabajadorServicios {
     public TrabajadorServicios(TrabajadorDAO dao) {
         this.dao = dao;
     }
-
-    public TrabajadorDTO registrar(TrabajadorDTO dto) {
-        Trabajador t = TrabajadorMapper.toEntity(dto);
-        dao.agregar(t);
-        return TrabajadorMapper.toDTO(t);
+public TrabajadorDTO registrar(TrabajadorDTO dto) {
+    Trabajador t = TrabajadorMapper.toEntity(dto);
+    boolean exito = dao.agregar(t);
+    if (exito) {
+        return dto; 
     }
+    return null;
+}
 
     public List<TrabajadorDTO> listar(String filtroPuesto) {
         return dao.listar(filtroPuesto)

@@ -24,11 +24,14 @@ public class ProduccionServicios {
     public ProduccionServicios(ProduccionDAO dao) {
         this.dao = dao;
     }
+    public boolean agregar(Produccion p) {
+        return dao.agregar(p);
+    }
 
     public ProduccionDTO registrar(ProduccionDTO dto) {
         Produccion p = ProduccionMapper.toEntity(dto);
 
-        // Ejemplo de cálculo de productividad 
+        p.setIdCultivo(dto.getIdCultivo());
         double productividad = p.getCantidadRecolectada() * 0.8; 
         p.setProductividad(productividad);
 
