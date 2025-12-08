@@ -20,6 +20,7 @@ public class ReporteProduccionXml {
             sb.append("  <cosecha>\n");
             sb.append("    <id>").append(d.getId()).append("</id>\n");
             sb.append("    <fecha>").append(esc(d.getFecha() != null ? d.getFecha().toString() : "")).append("</fecha>\n");
+            sb.append("    <idCultivo>").append(d.getIdCultivo()).append("</idCultivo>\n");
             sb.append("    <cantidadRecolectada>").append(d.getCantidadRecolectada()).append("</cantidadRecolectada>\n");
             sb.append("    <calidad>").append(esc(d.getCalidad())).append("</calidad>\n");
             sb.append("    <destino>").append(esc(d.getDestino())).append("</destino>\n");
