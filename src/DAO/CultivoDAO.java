@@ -117,15 +117,26 @@ public class CultivoDAO {
         }
     }
 
-    private Cultivo map(ResultSet rs) throws SQLException {
-        Cultivo c = new Cultivo();
-        c.setId(rs.getInt("id"));
-        c.setNombre(rs.getString("Nombre"));
-        c.setTipo(TipoCultivo.valueOf(rs.getString("Tipo")));
-        c.setAreaSembrada(rs.getDouble("AreaSembrada"));
-        c.setEstadoCrecimiento(EstadoCrecimiento.valueOf(rs.getString("EstadoCrecimiento")));
-        c.setFechaSiembra(rs.getDate("FechaSiembra"));
-        c.setFechaCosecha(rs.getDate("FechaCosecha"));
-        return c;
+   private Cultivo map(ResultSet rs) throws SQLException {
+    Cultivo c = new Cultivo();
+    
+    c.setId(rs.getInt("id"));
+    c.setNombre(rs.getString("Nombre"));
+    
+    String tipoString = rs.getString("Tipo");
+    if (tipoString != null) {
+        c.setTipo(TipoCultivo.valueOf(tipoString.toUpperCase()));
     }
+
+    String estadoString = rs.getString("EstadoCrecimiento");
+    if (estadoString != null) {
+        c.setEstadoCrecimiento(EstadoCrecimiento.valueOf(estadoString.toUpperCase()));
+    }
+ 
+    c.setAreaSembrada(rs.getDouble("AreaSembrada"));
+    c.setFechaSiembra(rs.getDate("FechaSiembra"));
+    c.setFechaCosecha(rs.getDate("FechaCosecha"));
+    
+    return c;
+}
 }
