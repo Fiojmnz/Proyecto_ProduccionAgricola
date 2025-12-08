@@ -3,19 +3,84 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
-
+import Controlador.ProduccionController;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.text.ParseException;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+import Modelo.ProduccionDTO;;
 /**
  *
  * @author AsusVivobook
  */
 public class FrmListarPorFecha extends javax.swing.JFrame {
+private ProduccionController controller; 
 
-    /**
-     * Creates new form FrmListarPorFecha
-     */
+
+    private java.sql.Date convertirFecha(String texto) throws Exception {
+        if (texto == null || texto.trim().isEmpty()) {
+            throw new IllegalArgumentException("La fecha es obligatoria o está vacía."); 
+        }
+      
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd"); 
+        sdf.setLenient(false);
+        java.util.Date fecha = sdf.parse(texto.trim());
+        return new java.sql.Date(fecha.getTime());
+    }
+   
+    
     public FrmListarPorFecha() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        this.setTitle("Filtrar Producción por Fecha");
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+
+        try {
+            controller = new ProduccionController(); 
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al conectar: " + ex.getMessage());
+        }
+        
+
+
+        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd"))));
+        jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd")))); 
     }
+
+ 
+   public void cargarTablaProduccion(java.sql.Date fechaInicio, java.sql.Date fechaFin) {
+    try {
+
+        List<ProduccionDTO> lista = controller.listarProduccionPorFecha(fechaInicio, fechaFin);
+
+  
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.setColumnIdentifiers(new String[]{
+            "ID", "Fecha", "Cultivo", "Cantidad", "Calidad", "Destino"
+        });
+
+
+        for (ProduccionDTO dto : lista) {
+            modelo.addRow(new Object[]{
+                dto.getId(),
+                dto.getFecha(),
+                dto.getIdCultivo(),
+                dto.getCantidadRecolectada(),
+                dto.getCalidad(),
+                dto.getDestino()
+            });
+        }
+
+
+        jTable2.setModel(modelo);
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al cargar la tabla: " + e.getMessage());
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -36,10 +101,12 @@ public class FrmListarPorFecha extends javax.swing.JFrame {
         jFormattedTextField2 = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(153, 255, 153));
 
+        jLabel3.setBackground(new java.awt.Color(153, 255, 153));
         jLabel3.setFont(new java.awt.Font("Segoe UI Semibold", 0, 24)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(153, 153, 153));
         jLabel3.setText("Listar Produccion por Fecha ");
+        jLabel3.setOpaque(true);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
         jLabel1.setText("Fecha Inicio:");
@@ -57,16 +124,19 @@ public class FrmListarPorFecha extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane1.setBackground(new java.awt.Color(153, 255, 153));
+
         jTable2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTable2.setForeground(new java.awt.Color(153, 255, 153));
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Fecha", "Cultivo", "Cantidad", "Unidad", "Responsable", "Observaciones"
+                "ID", "Fecha", "Cultivo", "Cantidad", "Calidad", "Destino"
             }
         ));
         jScrollPane1.setViewportView(jTable2);
@@ -97,8 +167,10 @@ public class FrmListarPorFecha extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE))
+                        .addGap(0, 153, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -116,16 +188,34 @@ public class FrmListarPorFecha extends javax.swing.JFrame {
                     .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(40, 40, 40)
                 .addComponent(btnBuscar)
-                .addGap(28, 28, 28)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
-                .addGap(18, 18, 18))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
+                                   
+    String fechaInicioText = jFormattedTextField1.getText();
+    String fechaFinText = jFormattedTextField2.getText();
+
+    try {
+        java.sql.Date fechaInicio = convertirFecha(fechaInicioText);
+        java.sql.Date fechaFin = convertirFecha(fechaFinText);
+
+
+        cargarTablaProduccion(fechaInicio, fechaFin);
+
+    } catch (IllegalArgumentException | ParseException e) {
+        JOptionPane.showMessageDialog(this,
+                "Formato incorrecto. Use YYYY-MM-DD.",
+                "Error de formato",
+                JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+                "Error en la búsqueda: " + e.getMessage());
+}
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     /**

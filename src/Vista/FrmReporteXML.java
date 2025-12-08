@@ -3,18 +3,50 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
-
+import Controlador.ProduccionController;
+import Modelo.ProduccionDTO;
+import Util.ReporteProduccionXml; 
+import java.sql.Date;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import java.io.FileWriter; 
+import java.io.IOException;
+import javax.swing.JFileChooser; 
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author AsusVivobook
  */
 public class FrmReporteXML extends javax.swing.JFrame {
+ private ProduccionController controller;
 
-    /**
-     * Creates new form FrmReporteXML
-     */
     public FrmReporteXML() {
         initComponents();
+        setLocationRelativeTo(null);
+        setTitle("Generar Reporte XML");
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+        try {
+            controller = new ProduccionController();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al conectar: " + ex.getMessage());
+        }
+
+        java.text.SimpleDateFormat formato = new java.text.SimpleDateFormat("yyyy-MM-dd");
+
+        jFormattedTextField1.setFormatterFactory(
+            new javax.swing.text.DefaultFormatterFactory(
+                new javax.swing.text.DateFormatter(formato)
+            )
+        );
+        jFormattedTextField2.setFormatterFactory(
+            new javax.swing.text.DefaultFormatterFactory(
+                new javax.swing.text.DateFormatter(formato)
+            )
+        );
     }
 
     /**
@@ -39,6 +71,8 @@ public class FrmReporteXML extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.setBackground(new java.awt.Color(204, 255, 204));
+
         jLabel1.setBackground(new java.awt.Color(153, 153, 153));
         jLabel1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(153, 153, 153));
@@ -53,10 +87,20 @@ public class FrmReporteXML extends javax.swing.JFrame {
         btnGenerarReporte.setBackground(new java.awt.Color(151, 182, 243));
         btnGenerarReporte.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnGenerarReporte.setText("Generar Reporte");
+        btnGenerarReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerarReporteActionPerformed(evt);
+            }
+        });
 
         btnSalir.setBackground(new java.awt.Color(255, 153, 153));
         btnSalir.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -78,7 +122,7 @@ public class FrmReporteXML extends javax.swing.JFrame {
             }
         });
 
-        jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy/MM/dd"))));
+        jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd"))));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -148,6 +192,74 @@ public class FrmReporteXML extends javax.swing.JFrame {
     private void jFormattedTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jFormattedTextField1ActionPerformed
+
+    private void btnGenerarReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarReporteActionPerformed
+
+
+    String fechaInicioText = jFormattedTextField1.getText().trim();
+    String fechaFinText = jFormattedTextField2.getText().trim();
+
+    if (fechaInicioText.isEmpty() || fechaFinText.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Complete ambas fechas.", "Error", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    try {
+        java.sql.Date fechaInicio = java.sql.Date.valueOf(fechaInicioText);
+        java.sql.Date fechaFin = java.sql.Date.valueOf(fechaFinText);
+
+        if (fechaInicio.after(fechaFin)) {
+            JOptionPane.showMessageDialog(this, "Fecha inicio no puede ser mayor que fecha final.");
+            return;
+        }
+
+        List<ProduccionDTO> datos = controller.listarProduccionPorFecha(fechaInicio, fechaFin);
+
+  
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.setColumnIdentifiers(new String[]{
+            "ID", "Fecha", "Cultivo ID", "Cantidad", "Calidad", "Destino"
+        });
+
+        for (ProduccionDTO p : datos) {
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getFecha(),
+                p.getIdCultivo(),
+                p.getCantidadRecolectada(),
+                p.getCalidad(),
+                p.getDestino()
+            });
+        }
+//
+        jTable1.setModel(modelo);
+
+        // Generar XML
+        String xml = ReporteProduccionXml.generarXML(datos);
+
+        JFileChooser chooser = new JFileChooser();
+        chooser.setSelectedFile(new java.io.File("Reporte_" + fechaInicioText + "_a_" + fechaFinText + ".xml"));
+        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            try (FileWriter fw = new FileWriter(chooser.getSelectedFile())) {
+                fw.write(xml);
+                JOptionPane.showMessageDialog(this, "Reporte XML guardado correctamente.");
+            }
+        }
+
+    } catch (IllegalArgumentException e) {
+        JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Use: YYYY-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    }
+
+
+
+    }//GEN-LAST:event_btnGenerarReporteActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnSalirActionPerformed
 
     /**
      * @param args the command line arguments
