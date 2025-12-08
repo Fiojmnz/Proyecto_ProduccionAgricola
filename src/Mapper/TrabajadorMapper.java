@@ -14,6 +14,7 @@ import Modelo.Trabajador;
 public class TrabajadorMapper {
     public static Trabajador toEntity(TrabajadorDTO dto) {
         Trabajador t = new Trabajador();
+        t.setId(dto.getId());
         t.setCedula(dto.getCedula());
         t.setNombre(dto.getNombre());
         t.setTelefono(dto.getTelefono());
@@ -26,6 +27,7 @@ public class TrabajadorMapper {
 
     public static TrabajadorDTO toDTO(Trabajador t) {
         TrabajadorDTO dto = new TrabajadorDTO();
+        dto.setId(t.getId());
         dto.setCedula(t.getCedula());
         dto.setNombre(t.getNombre());
         dto.setTelefono(t.getTelefono());
