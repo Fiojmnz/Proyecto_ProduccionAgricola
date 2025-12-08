@@ -16,8 +16,8 @@ public class Produccion {
     private Date fecha;            
     private double cantidadRecolectada;
     private String calidad;             
-    private double productividad;   // calculado, no se guarda en DB
-
+    private double productividad;  
+    private int idCultivo;
     private String destino;            
 
     public Produccion() {
@@ -43,6 +43,10 @@ public class Produccion {
         return cantidadRecolectada;
     }
 
+    public Integer getIdCultivo() {
+        return idCultivo;
+    }
+
     public String getCalidad() {
         return calidad;
     }
@@ -57,6 +61,10 @@ public class Produccion {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setIdCultivo(Integer idCultivo) {
+        this.idCultivo = idCultivo;
     }
 
     public void setFecha(Date fecha) {
