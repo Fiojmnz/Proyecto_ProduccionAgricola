@@ -6,6 +6,8 @@ package Controlador;
 
 import DAO.TrabajadorDAO;
 import DB.ConnectionFactory;
+import Mapper.TrabajadorMapper;
+import Modelo.Trabajador;
 import Modelo.TrabajadorDTO;
 import Servicios.TrabajadorServicios;
 
@@ -24,21 +26,16 @@ public class TrabajadorController {
         Connection conn = ConnectionFactory.getInstancia().getConnection();
         this.service = new TrabajadorServicios(new TrabajadorDAO(conn));
     }
-
-    public TrabajadorDTO registrarTrabajador(String cedula, String nombre, String telefono,
-            String correo, String puesto, String horario, double salario) {
-
-        TrabajadorDTO dto = new TrabajadorDTO();
-        dto.setCedula(cedula);
-        dto.setNombre(nombre);
-        dto.setTelefono(telefono);
-        dto.setCorreo(correo);
-        dto.setPuesto(puesto);
-        dto.setHorario(horario);
-        dto.setSalario(salario);
-
-        return service.registrar(dto);
+public boolean registrarTrabajador(TrabajadorDTO dto) {
+        try {
+            TrabajadorDTO resultado = service.registrar(dto);
+            return resultado != null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
+
 
     public List<TrabajadorDTO> listarTrabajadores(String filtroPuesto) {
         return service.listar(filtroPuesto);
