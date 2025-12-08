@@ -4,25 +4,32 @@
  */
 package Mapper;
 
-import Modelo.UsuarioDTO;
 import Modelo.Usuario;
+import Modelo.UsuarioDTO;
 
-/**
- *
- * @author AsusVivobook
- */
 public class UsuarioMapper {
+
     public static Usuario toEntity(UsuarioDTO dto) {
         Usuario u = new Usuario();
+        
+        u.setId(dto.getId());
         u.setUsername(dto.getUsername());
+        u.setPasswordHash(dto.getPassword()); 
         u.setRol(dto.getRol());
+        u.setActivo(dto.isActivo());
+
         return u;
     }
 
     public static UsuarioDTO toDTO(Usuario u) {
         UsuarioDTO dto = new UsuarioDTO();
+
+        dto.setId(u.getId());
         dto.setUsername(u.getUsername());
+        dto.setPassword(u.getPasswordHash()); 
         dto.setRol(u.getRol());
+        dto.setActivo(u.isActivo());
+
         return dto;
     }
 }
