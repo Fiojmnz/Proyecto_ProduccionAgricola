@@ -16,9 +16,16 @@ public class ProduccionDTO {
     private Date fecha;
     private double cantidadRecolectada;
     private String calidad;
-    private double productividad; // calculado en servicio
+    private double productividad; 
     private String destino;
+    private int idCultivo;
 
+    public int getIdCultivo() {
+        return idCultivo;
+    }
+
+    
+    
     public int getId() {
         return id;
     }
@@ -47,6 +54,10 @@ public class ProduccionDTO {
         this.id = id;
     }
 
+    public void setIdCultivo(int idCultivo) {
+        this.idCultivo = idCultivo;
+    }
+    
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
