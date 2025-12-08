@@ -5,6 +5,8 @@
 package Vista;
 
 import Controlador.ProduccionController;
+import DAO.CultivoDAO;
+import DB.ConnectionFactory;
 import Enum.Rol;
 import Modelo.ProduccionDTO;
 import Vista.FrmInicio;
@@ -13,6 +15,9 @@ import java.sql.SQLException;
 import java.sql.Date;
 import Enum.Destino;
 import Modelo.Cultivo;
+import Modelo.CultivoDTO;
+import java.util.List;
+import java.sql.Connection;
 /**
  *
  * @author AsusVivobook
@@ -29,6 +34,8 @@ public class FrmProduccion extends javax.swing.JFrame {
         this(); 
        this.username = username;
         this.rol = rol;
+        aplicarPermisos();
+        cargarCultivosCombo();
      }
      
     public FrmProduccion() { 
@@ -49,6 +56,24 @@ public class FrmProduccion extends javax.swing.JFrame {
     }
     
      }
+  private void cargarCultivosCombo() {
+    try {
+        Connection conn = new ConnectionFactory().getConnection();
+        CultivoDAO dao = new CultivoDAO(conn);
+
+        List<Cultivo> lista = dao.listar("");
+
+        ComboCultivo.removeAllItems();
+
+        for (Cultivo c : lista) {
+            ComboCultivo.addItem(c.getId() + " - " + c.getNombre());
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error cargando cultivos: " + e.getMessage());
+    }
+}
+
      
      public void cargarDesdeTabla(Modelo.ProduccionDTO dto) {
     jTextField1.setText(String.valueOf(dto.getId())); 
@@ -60,6 +85,30 @@ public class FrmProduccion extends javax.swing.JFrame {
     jComboBox1.setSelectedItem(dto.getDestino()); 
 
 }
+     private void aplicarPermisos() {
+    if (this.rol == Rol.TRABAJADOR) {
+
+        btnagregar.setEnabled(false);
+        btnactualizar.setEnabled(false);
+        btneliminar.setEnabled(false);
+
+       
+        btnlistarporFecha.setEnabled(true);  
+        btnVerTabla.setEnabled(true);
+        btnSalir.setEnabled(true);
+
+       
+}
+}
+    private void limpiarCampos() {
+    jTextField1.setText("");
+    jFormattedTextField1.setText("");
+    jTextField2.setText("");
+    jTextField4.setText("");
+    ComboCultivo.setSelectedIndex(0);
+    jComboBox1.setSelectedIndex(0);
+}
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -73,25 +122,27 @@ public class FrmProduccion extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         btnagregar = new javax.swing.JButton();
         btnactualizar = new javax.swing.JButton();
         btneliminar = new javax.swing.JButton();
-        btnbuscar = new javax.swing.JButton();
+        btnlistarporFecha = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
         btnVerTabla = new javax.swing.JButton();
-        jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnGenerar = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
+        txtCultivo = new javax.swing.JLabel();
+        ComboCultivo = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(153, 255, 204));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI Semibold", 0, 24)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(102, 102, 102));
@@ -102,9 +153,6 @@ public class FrmProduccion extends javax.swing.JFrame {
 
         jLabel11.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
         jLabel11.setText("Fecha:");
-
-        jLabel12.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
-        jLabel12.setText("Cultivo:");
 
         jLabel13.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
         jLabel13.setText("Cantidad:");
@@ -145,13 +193,13 @@ public class FrmProduccion extends javax.swing.JFrame {
             }
         });
 
-        btnbuscar.setBackground(new java.awt.Color(255, 102, 51));
-        btnbuscar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
-        btnbuscar.setForeground(new java.awt.Color(255, 255, 255));
-        btnbuscar.setText("ListarPorfecha");
-        btnbuscar.addActionListener(new java.awt.event.ActionListener() {
+        btnlistarporFecha.setBackground(new java.awt.Color(255, 102, 51));
+        btnlistarporFecha.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
+        btnlistarporFecha.setForeground(new java.awt.Color(255, 255, 255));
+        btnlistarporFecha.setText("ListarPorfecha");
+        btnlistarporFecha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnbuscarActionPerformed(evt);
+                btnlistarporFechaActionPerformed(evt);
             }
         });
 
@@ -180,16 +228,24 @@ public class FrmProduccion extends javax.swing.JFrame {
             }
         });
 
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-
         jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        jButton1.setBackground(new java.awt.Color(102, 102, 102));
-        jButton1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("GenerarReporte");
+        btnGenerar.setBackground(new java.awt.Color(102, 102, 102));
+        btnGenerar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
+        btnGenerar.setForeground(new java.awt.Color(255, 255, 255));
+        btnGenerar.setText("GenerarReporte");
+        btnGenerar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerarActionPerformed(evt);
+            }
+        });
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        txtCultivo.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        txtCultivo.setText("Cultivo");
+
+        ComboCultivo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -200,7 +256,6 @@ public class FrmProduccion extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(btnagregar)
                                 .addGap(18, 18, 18)
@@ -208,37 +263,36 @@ public class FrmProduccion extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(btneliminar)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnbuscar)
+                                .addComponent(btnlistarporFecha)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnSalir))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel13))
-                                .addGap(80, 80, 80)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jTextField2)
-                                        .addGap(22, 22, 22))))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
-                                        .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(36, 36, 36)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                                    .addComponent(jTextField4)
-                                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(jComboBox1, 0, 120, Short.MAX_VALUE)
+                                    .addComponent(jTextField4)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(144, 144, 144)
-                                .addComponent(jLabel9))))
+                                .addComponent(jLabel9))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel13)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(txtCultivo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGap(80, 80, 80)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                                    .addComponent(jTextField1)
+                                    .addComponent(ComboCultivo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jTextField2)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(108, 108, 108)
-                        .addComponent(jButton1)
+                        .addComponent(btnGenerar)
                         .addGap(70, 70, 70)
                         .addComponent(btnVerTabla)))
                 .addContainerGap(33, Short.MAX_VALUE))
@@ -256,11 +310,13 @@ public class FrmProduccion extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(ComboCultivo, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                        .addGap(3, 3, 3))
+                    .addComponent(txtCultivo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -271,7 +327,7 @@ public class FrmProduccion extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
                         .addGap(1, 1, 1))
                     .addComponent(jLabel15))
                 .addGap(129, 129, 129)
@@ -279,12 +335,12 @@ public class FrmProduccion extends javax.swing.JFrame {
                     .addComponent(btnagregar)
                     .addComponent(btnactualizar)
                     .addComponent(btneliminar)
-                    .addComponent(btnbuscar)
+                    .addComponent(btnlistarporFecha)
                     .addComponent(btnSalir))
                 .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnVerTabla)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnGenerar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -309,96 +365,139 @@ public class FrmProduccion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnagregarActionPerformed
-   try {
-        Date fecha = Date.valueOf(jFormattedTextField1.getText().trim()); 
-        double cantidad = Double.parseDouble(jTextField2.getText().trim());
-        String calidad = jTextField4.getText().trim();
-        
-       
-        String destino = jComboBox1.getSelectedItem().toString().trim(); 
 
+    try {
      
-        if (calidad.isEmpty() || destino.isEmpty()) {
-             JOptionPane.showMessageDialog(this, "Calidad y Destino son obligatorios.");
-             return;
+        String fechaTxt = jFormattedTextField1.getText().trim();
+        if (fechaTxt.isEmpty() || fechaTxt.contains("_")) {
+            JOptionPane.showMessageDialog(this, "Ingrese una fecha válida (YYYY-MM-DD)");
+            return;
         }
-        
-        controller.registrarProduccion(fecha, cantidad, calidad, destino);
+        java.sql.Date fecha = java.sql.Date.valueOf(fechaTxt);
 
-        JOptionPane.showMessageDialog(this, "Registro agregado correctamente");
+        String cantTxt = jTextField2.getText().trim();
+        if (cantTxt.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese la cantidad recolectada");
+            return;
+        }
+        double cantidad = Double.parseDouble(cantTxt);
 
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Error: La Cantidad debe ser un valor numérico válido.");
-    } catch (IllegalArgumentException e) {
- 
-        JOptionPane.showMessageDialog(this, "Error de Datos: Verifique la Fecha o las validaciones: " + e.getMessage());
+        String calidad = jTextField4.getText().trim();
+        if (calidad.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese la calidad");
+            return;
+        }
+
+        if (ComboCultivo.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un cultivo");
+            return;
+        }
+        String seleccionado = ComboCultivo.getSelectedItem().toString();
+        int idCultivo = Integer.parseInt(seleccionado.split(" - ")[0]);
+
+        if (jComboBox1.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un destino");
+            return;
+        }
+        String destinoStr = jComboBox1.getSelectedItem().toString();
+        Destino destino = Destino.valueOf(destinoStr);
+
+       
+        boolean exito = controller.registrarProduccion(fecha, cantidad, calidad, destino, idCultivo);
+
+        if (exito) {
+            JOptionPane.showMessageDialog(this, "¡Producción registrada correctamente!");
+            limpiarCampos();
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo registrar. Verifique que el cultivo exista.");
+        }
+
+    } catch (IllegalArgumentException ex) {
+        JOptionPane.showMessageDialog(this, "Destino inválido. Elija uno de la lista.");
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error al agregar: " + e.getMessage());
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, 
+            "ERROR DETALLADO:\n" + e.getMessage(), 
+            "Error al guardar", JOptionPane.ERROR_MESSAGE);
     }
+
+
+
+
     }//GEN-LAST:event_btnagregarActionPerformed
 
     private void btnactualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnactualizarActionPerformed
-        try {
-        if (jTextField1.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "El ID es obligatorio para actualizar.");
-            return;
-        }
-        
+      try {
+
         int id = Integer.parseInt(jTextField1.getText().trim());
         Date fecha = Date.valueOf(jFormattedTextField1.getText().trim());
         double cantidad = Double.parseDouble(jTextField2.getText().trim());
-        
+        String calidad = jTextField4.getText().trim();
+        String destino = jComboBox1.getSelectedItem().toString().trim();
 
-        String Calidad = jTextField4.getText().trim();
-        String Destino = jComboBox1.getSelectedItem().toString().trim();
-        
+        String item = ComboCultivo.getSelectedItem().toString();
+        int idCultivo = Integer.parseInt(item.split(" - ")[0]);
+
         ProduccionDTO dto = new ProduccionDTO();
         dto.setId(id);
         dto.setFecha(fecha);
         dto.setCantidadRecolectada(cantidad);
-        dto.setCalidad(Calidad);
-        dto.setDestino(Destino); 
-        
+        dto.setCalidad(calidad);
+        dto.setDestino(destino);
+        dto.setIdCultivo(idCultivo);
+
         if (controller.actualizarProduccion(dto)) {
-            JOptionPane.showMessageDialog(this, "Actualizado correctamente");
+            JOptionPane.showMessageDialog(this, "Actualizado correctamente.");
         } else {
-            JOptionPane.showMessageDialog(this, "No se encontró el registro");
+            JOptionPane.showMessageDialog(this, "No se encontró el registro.");
         }
 
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Error: ID o Cantidad deben ser valores numéricos válidos.");
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error al actualizar: " + e.getMessage());
-    }
+}
+
+
     }//GEN-LAST:event_btnactualizarActionPerformed
 
     private void btneliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneliminarActionPerformed
-        try {
+       try {
+        if (jTextField1.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar un ID para eliminar.");
+            return;
+        }
+
         int id = Integer.parseInt(jTextField1.getText().trim());
 
         int op = JOptionPane.showConfirmDialog(
-                this,
-                "¿Eliminar este registro?",
-                "Confirmar",
-                JOptionPane.YES_NO_OPTION
+            this, 
+            "¿Desea eliminar este registro?", 
+            "Confirmación", 
+            JOptionPane.YES_NO_OPTION
         );
 
         if (op == JOptionPane.YES_OPTION) {
             if (controller.eliminarProduccion(id)) {
-                JOptionPane.showMessageDialog(this, "Eliminado correctamente");
+                JOptionPane.showMessageDialog(this, "Registro eliminado correctamente.");
             } else {
-                JOptionPane.showMessageDialog(this, "No existe el ID");
+                JOptionPane.showMessageDialog(this, "No existe un registro con ese ID.");
             }
         }
 
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "El ID debe ser un número.");
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage());
-    }
+}
+
+
+
     }//GEN-LAST:event_btneliminarActionPerformed
 
-    private void btnbuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbuscarActionPerformed
-      
-    }//GEN-LAST:event_btnbuscarActionPerformed
+    private void btnlistarporFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlistarporFechaActionPerformed
+    FrmListarPorFecha ventana = new FrmListarPorFecha();
+    ventana.setLocationRelativeTo(null);
+    ventana.setVisible(true);
+    }//GEN-LAST:event_btnlistarporFechaActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
       FrmInicio inicio = new FrmInicio(this.username, this.rol);
@@ -410,8 +509,15 @@ public class FrmProduccion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnVerTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerTablaActionPerformed
-       new FrmListaProduccion().setVisible(true);
+       FrmListaProduccion ventana = new FrmListaProduccion();
+       ventana.setVisible(true);    
     }//GEN-LAST:event_btnVerTablaActionPerformed
+
+    private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
+       FrmReporteXML ventana = new FrmReporteXML();
+       ventana.setLocationRelativeTo(null);
+       ventana.setVisible(true);
+    }//GEN-LAST:event_btnGenerarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -449,18 +555,18 @@ public class FrmProduccion extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> ComboCultivo;
+    private javax.swing.JButton btnGenerar;
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnVerTabla;
     private javax.swing.JButton btnactualizar;
     private javax.swing.JButton btnagregar;
-    private javax.swing.JButton btnbuscar;
     private javax.swing.JButton btneliminar;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnlistarporFecha;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -468,7 +574,7 @@ public class FrmProduccion extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JLabel txtCultivo;
     // End of variables declaration//GEN-END:variables
 }

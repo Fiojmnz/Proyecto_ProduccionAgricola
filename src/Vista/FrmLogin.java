@@ -21,22 +21,41 @@ import javax.swing.JTextField;
  */
 public class FrmLogin extends javax.swing.JFrame {
     private UsuarioController controller;
+    private boolean conexionOk = false;
     /**
      * Creates new form FrmLogin
      */
     
-    public FrmLogin() {
+  public FrmLogin() {
         initComponents();
-         CargarRoles();
-        setLocationRelativeTo(null); // Centrar ventana
+        CargarRoles();  
+        setLocationRelativeTo(null);
 
+      
         try {
             controller = new UsuarioController();
+              conexionOk  = true;
+
+            JOptionPane.showMessageDialog(
+                this,
+                "Conexión establecida correctamente.",
+                "Conexión Exitosa",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this,
-                "Error al conectar con la base de datos: " + ex.getMessage());
+          conexionOk  = false;
+
+            JOptionPane.showMessageDialog(
+                this,
+                "No se pudo conectar con la base de datos.\n" + ex.getMessage(),
+                "Error de conexión",
+                JOptionPane.ERROR_MESSAGE
+            );
+
+            btnAgregar.setEnabled(false);
         }
-    }
+  }
     private void CargarRoles() {
     jComboBox1.removeAllItems(); 
 
@@ -66,6 +85,8 @@ public class FrmLogin extends javax.swing.JFrame {
         btnCrearUsuario = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(204, 255, 204));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(153, 153, 153));
@@ -101,6 +122,7 @@ public class FrmLogin extends javax.swing.JFrame {
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        txtROL.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         txtROL.setText("ROL");
 
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -109,6 +131,7 @@ public class FrmLogin extends javax.swing.JFrame {
             }
         });
 
+        btnCrearUsuario.setBackground(new java.awt.Color(255, 204, 204));
         btnCrearUsuario.setText("CrearUsuario");
         btnCrearUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,7 +185,7 @@ public class FrmLogin extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtROL, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar)
                     .addComponent(btnCancelar)
@@ -185,50 +208,67 @@ public class FrmLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-          String user = jTextField1.getText().trim();
-    String pass = new String(jPasswordField1.getPassword()).trim();
-
-    if (user.isEmpty() || pass.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Debe ingresar usuario y contraseña");
-        return;
-    }
-
-    try {
-
-        boolean ok = AdministradorAuntenticacion.getInstancia().login(user, pass);
-
-        if (!ok) {
-            JOptionPane.showMessageDialog(this, "Credenciales incorrectas");
+   if (!conexionOk) {
+            JOptionPane.showMessageDialog(this,
+                "No se puede iniciar sesión porque NO hay conexión a la BD.",
+                "Error de conexión",
+                JOptionPane.ERROR_MESSAGE
+            );
             return;
         }
 
-        JOptionPane.showMessageDialog(this, "Bienvenido " + user);
+        String user = jTextField1.getText().trim();
+        String pass = new String(jPasswordField1.getPassword()).trim();
+        String rolSeleccionadoStr = jComboBox1.getSelectedItem().toString().trim();
 
-        String username = AdministradorAuntenticacion.getInstancia()
-                              .getUsuarioActual().getUsername();
+        if (user.isEmpty() || pass.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar usuario y contraseña");
+            return;
+        }
 
-        Rol rol = AdministradorAuntenticacion.getInstancia().getRol();
+        try {
+            boolean ok = AdministradorAuntenticacion.getInstancia().login(user, pass);
 
-        FrmInicio inicio = new FrmInicio(username, rol);
-        inicio.setVisible(true);
+            if (!ok) {
+                JOptionPane.showMessageDialog(this, "Credenciales incorrectas");
+                return;
+            }
 
-        this.dispose();
+            Rol rolReal = AdministradorAuntenticacion.getInstancia().getRol();
+            Rol rolSeleccionado = Rol.valueOf(rolSeleccionadoStr);
 
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, 
-            "Error al iniciar sesión: " + ex.getMessage());
-    }
 
-    
+            if (!rolReal.equals(rolSeleccionado)) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Error: el rol seleccionado no coincide con el usuario.",
+                        "Acceso Denegado",
+                        JOptionPane.ERROR_MESSAGE);
+
+                AdministradorAuntenticacion.getInstancia().logout();
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this, "Bienvenido " + user);
+
+            FrmInicio inicio = new FrmInicio(user, rolReal);
+            inicio.setVisible(true);
+            this.dispose();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Error al iniciar sesión: " + ex.getMessage());
+
+
+        }
 
                                 
       
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        jTextField1.setText("");
-        jPasswordField1.setText("");
+        System.exit(0);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed

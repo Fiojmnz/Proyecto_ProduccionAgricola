@@ -16,57 +16,70 @@ import Vista.FrmInicio;
  * @author gipsy
  */
 public class FrmAlmacenamiento extends javax.swing.JFrame {
-    private AlmacenamientoController controller;
-   
-	private String username;
-	private Rol rol;
-
+  private AlmacenamientoController controller;
+    private String username;
+    private Rol rol;
 
     public FrmAlmacenamiento(String username, Rol rol) {
-        this(); 
+        this();
         this.username = username;
         this.rol = rol;
+        aplicarPermisos();
     }
- 
 
-	public FrmAlmacenamiento() {
-		initComponents();
-		setLocationRelativeTo(null);
+    public FrmAlmacenamiento() {
+        initComponents();
+        setLocationRelativeTo(null);
 
-		try {
-			controller = new AlmacenamientoController();
-		} catch (SQLException ex) {
-			JOptionPane.showMessageDialog(this, "Error al conectar: " + ex.getMessage());
-		}
-	}
+        try {
+            controller = new AlmacenamientoController();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error de conexión: " + ex.getMessage());
+        }
 
-	private void limpiarCampos() {
-		txtId.setText("");
-		txtProducto.setText("");
-		txtCantidad.setText("");
-		txtFechaIngreso.setText("");
-		txtFechaEgreso.setText("");
-	}
+        // FORMATO DE FECHA CORRECTO
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        txtFechaIngreso.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(
+                new javax.swing.text.DateFormatter(sdf)));
+        txtFechaEgreso.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(
+                new javax.swing.text.DateFormatter(sdf)));
+    }
 
-  
-	private java.sql.Date convertirFecha(String texto) throws Exception {
-		texto = texto.trim();
+    private void limpiarCampos() {
+        txtId.setText("");
+        txtProducto.setText("");
+        txtCantidad.setText("");
+        txtFechaIngreso.setText("");
+        txtFechaEgreso.setText("");
+    }
 
-		java.text.SimpleDateFormat formato = new java.text.SimpleDateFormat("yyyy-MM-dd");
-		formato.setLenient(false);
+    private java.sql.Date convertirFecha(String texto) {
+        if (texto == null || texto.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return java.sql.Date.valueOf(texto.trim());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Fecha inválida: " + texto);
+        }
+    }
 
-		java.util.Date fecha = formato.parse(texto);
-		return new java.sql.Date(fecha.getTime());
-	}
-   
-	public void cargarDesdeTabla(AlmacenamientoDTO dto) {
-		txtId.setText(String.valueOf(dto.getId()));
-		txtProducto.setText(dto.getProducto());
-		txtCantidad.setText(String.valueOf(dto.getCantidad()));
-		txtFechaIngreso.setText(String.valueOf(dto.getFechaIngreso()));
-		txtFechaEgreso.setText(String.valueOf(dto.getFechaEgreso()));
-	}
+    public void cargarDesdeTabla(AlmacenamientoDTO dto) {
+        txtId.setText(String.valueOf(dto.getId()));
+        txtProducto.setText(dto.getProducto());
+        txtCantidad.setText(String.valueOf(dto.getCantidad()));
+        txtFechaIngreso.setText(dto.getFechaIngreso() != null ? dto.getFechaIngreso().toString() : "");
+        txtFechaEgreso.setText(dto.getFechaEgreso() != null ? dto.getFechaEgreso().toString() : "");
+    }
 
+    private void aplicarPermisos() {
+        if (rol == Rol.TRABAJADOR) {
+            btnagregar.setEnabled(false);
+            btnactualizar.setEnabled(false);
+            btneliminar.setEnabled(false);
+        }
+    
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,7 +112,7 @@ public class FrmAlmacenamiento extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
 
-        jPanel1.setBackground(new java.awt.Color(255, 51, 153));
+        jPanel1.setBackground(new java.awt.Color(204, 255, 102));
 
         jLabel1.setBackground(new java.awt.Color(102, 255, 102));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -200,7 +213,7 @@ public class FrmAlmacenamiento extends javax.swing.JFrame {
                 .addGap(21, 21, 21))
         );
 
-        txtFechaIngreso.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat(""))));
+        txtFechaIngreso.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd"))));
         txtFechaIngreso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtFechaIngresoActionPerformed(evt);
@@ -218,39 +231,37 @@ public class FrmAlmacenamiento extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(59, 59, 59)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(58, 58, 58))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(31, 31, 31)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(186, 186, 186)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtCantidad)
-                                        .addComponent(txtFechaIngreso)
-                                        .addComponent(txtFechaEgreso)
-                                        .addComponent(txtProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE))
-                                    .addComponent(txtId)))
-                            .addComponent(jLabel1))
-                        .addGap(87, 87, 87))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(90, 90, 90)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(186, 186, 186)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtProducto)
+                            .addComponent(txtId)
+                            .addComponent(txtCantidad)
+                            .addComponent(txtFechaIngreso)
+                            .addComponent(txtFechaEgreso)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(146, 146, 146)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(58, 58, 58)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(137, 137, 137))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(29, Short.MAX_VALUE)
+                .addGap(22, 22, 22)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -279,10 +290,10 @@ public class FrmAlmacenamiento extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(70, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -342,44 +353,33 @@ public class FrmAlmacenamiento extends javax.swing.JFrame {
 
     private void btnagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnagregarActionPerformed
     
-    String producto = txtProducto.getText().trim();
-    String cantidadText = txtCantidad.getText().trim();
-    String fechaIngresoText = txtFechaIngreso.getText().trim();
-    String fechaEgresoText = txtFechaEgreso.getText().trim();
+  try {
+            String producto = txtProducto.getText().trim();
+            String cantText = txtCantidad.getText().trim();
+            String fechaIngresoText = txtFechaIngreso.getText().trim();
+            String fechaEgresoText = txtFechaEgreso.getText().trim();
 
-   
-    if (producto.isEmpty() || cantidadText.isEmpty() || fechaIngresoText.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Producto, Cantidad y Fecha de Ingreso son obligatorios.");
-        return;
-    }
+            if (producto.isEmpty() || cantText.isEmpty() || fechaIngresoText.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Producto, Cantidad y Fecha Ingreso son obligatorios");
+                return;
+            }
 
-    try {
-        
-        int cantidad = Integer.parseInt(cantidadText);
-        
-        
-        java.sql.Date fechaIngreso = convertirFecha(fechaIngresoText);
-        
-    
-        java.sql.Date fechaEgreso = null;
-        if (!fechaEgresoText.isEmpty()) {
-             fechaEgreso = convertirFecha(fechaEgresoText);
+            int cantidad = Integer.parseInt(cantText);
+            java.sql.Date fechaIngreso = convertirFecha(fechaIngresoText);
+            java.sql.Date fechaEgreso = convertirFecha(fechaEgresoText); // puede ser null
+
+            controller.registrarAlmacenamiento(producto, cantidad, fechaIngreso, fechaEgreso);
+            JOptionPane.showMessageDialog(this, "¡Almacenamiento agregado correctamente!");
+            limpiarCampos();
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "La cantidad debe ser un número");
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
-
-      
-        controller.registrarAlmacenamiento(producto, cantidad, fechaIngreso, fechaEgreso);
-
-        JOptionPane.showMessageDialog(this, "Agregado correctamente");
-        limpiarCampos();
-
-    } catch (NumberFormatException e) {
     
-        JOptionPane.showMessageDialog(this, "Error: La Cantidad debe ser un número entero válido.");
-        
-    } catch (Exception e) {
-       
-        JOptionPane.showMessageDialog(this, "Error al agregar: Verifique el formato de la fecha (debe ser YYYY-MM-DD) o las restricciones de la DB: " + e.getMessage());
-    }
     
    
     }//GEN-LAST:event_btnagregarActionPerformed

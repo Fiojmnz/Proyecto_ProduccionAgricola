@@ -5,10 +5,12 @@
 package Vista;
 
 import Controlador.CultivoController;
+import Controlador.ProduccionController;
 import Enum.EstadoCrecimiento;
 import Enum.Rol;
 import Enum.TipoCultivo;
 import Modelo.CultivoDTO;
+import Modelo.ProduccionDTO;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
@@ -26,99 +28,102 @@ private CultivoController controller;
     private String username;
     private Rol rol;
 
- 
     public FrmListaCultivo(String username, Rol rol) {
         this();
         this.username = username;
         this.rol = rol;
     }
 
-
     public FrmListaCultivo() {
         initComponents();
-        this.setLocationRelativeTo(null);
-        this.setTitle("Lista de Cultivos Registrados");
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+        setLocationRelativeTo(null);
+        setTitle("Lista de Cultivos Registrados");
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         try {
             controller = new CultivoController();
-            cargarTablaCultivos();
+            cargarTabla();
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al conectar o cargar datos: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error de conexión: " + ex.getMessage());
         }
 
+        // Doble clic para editar
         jTable1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                if (evt.getClickCount() == 2) {
+                    int fila = jTable1.getSelectedRow();
+                    if (fila != -1) {
+                        abrirFormularioEdicion(fila);
+                    }
+                }
             }
         });
     }
 
-    
-    private void cargarTablaCultivos() {
-        try {
-            List<CultivoDTO> lista = controller.listarCultivos(username); 
+  private void cargarTabla() {
+  try {
+            List<CultivoDTO> lista = controller.listarCultivos(null); 
 
             DefaultTableModel modelo = new DefaultTableModel();
             modelo.setColumnIdentifiers(new String[]{
-                "Id", "Nombre", "Area Sembrada", "Fecha Siembra", "Fecha Cosecha", "Tipo", "Estado"
+                "Id", "Nombre", "Área Sembrada", "Fecha Siembra", "Fecha Cosecha", "Tipo", "Estado"
             });
 
-            for (CultivoDTO dto : lista) {
-                modelo.addRow(new Object[]{
-                    dto.getId(),
-                    dto.getNombre(),
-                    dto.getAreaSembrada(),
-                    dto.getFechaSiembra(),
-                    dto.getFechaCosecha(),
-                    dto.getTipo().name(),
-                    dto.getEstadoCrecimiento().name()
-                });
+            if (lista == null || lista.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay cultivos registrados aún.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                for (CultivoDTO dto : lista) {
+                    modelo.addRow(new Object[]{
+                        dto.getId(),
+                        dto.getNombre(),
+                        dto.getAreaSembrada(),
+                        dto.getFechaSiembra() != null ? dto.getFechaSiembra().toString() : "",
+                        dto.getFechaCosecha() != null ? dto.getFechaCosecha().toString() : "",
+                        dto.getTipo().name(),
+                        dto.getEstadoCrecimiento().name()
+                    });
+                }
             }
 
             jTable1.setModel(modelo);
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al llenar la tabla: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, 
+                "Error al cargar cultivos:\n" + e.toString(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-   
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
-        if (evt.getClickCount() == 2) { 
-            
-            int fila = jTable1.getSelectedRow();
-            if (fila == -1) return;
+}
 
-            try {
-                DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+    private void abrirFormularioEdicion(int fila) {
+        try {
+            CultivoDTO dto = new CultivoDTO();
 
-                CultivoDTO dto = new CultivoDTO();
-                
-                dto.setId((Integer) modelo.getValueAt(fila, 0)); 
-                dto.setNombre((String) modelo.getValueAt(fila, 1));
-                dto.setAreaSembrada(Double.parseDouble(modelo.getValueAt(fila, 2).toString())); 
-                
-             
-                dto.setFechaSiembra((java.sql.Date) modelo.getValueAt(fila, 3));
-                dto.setFechaCosecha((java.sql.Date) modelo.getValueAt(fila, 4));
-                
-         
-                dto.setTipo(TipoCultivo.valueOf((String) modelo.getValueAt(fila, 5)));
-                dto.setEstadoCrecimiento(EstadoCrecimiento.valueOf((String) modelo.getValueAt(fila, 6)));
+            dto.setId((Integer) jTable1.getValueAt(fila, 0));
+            dto.setNombre((String) jTable1.getValueAt(fila, 1));
+            dto.setAreaSembrada(Double.parseDouble(jTable1.getValueAt(fila, 2).toString()));
 
-            
-                FrmCultivo formGestion = new FrmCultivo();
-                formGestion.cargarDesdeTabla(dto);
-                
-                formGestion.setVisible(true);
-                this.dispose(); 
-                
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Error al cargar el registro para edición: " + e.getMessage());
-            }
+            String fechaSiembra = jTable1.getValueAt(fila, 3).toString();
+            dto.setFechaSiembra(fechaSiembra.isEmpty() ? null : java.sql.Date.valueOf(fechaSiembra));
+
+            Object fechaCosechaObj = jTable1.getValueAt(fila, 4);
+            String fechaCosecha = (fechaCosechaObj != null) ? fechaCosechaObj.toString() : null;
+            dto.setFechaCosecha((fechaCosecha != null && !fechaCosecha.isEmpty()) ? java.sql.Date.valueOf(fechaCosecha) : null);
+
+            dto.setTipo(TipoCultivo.valueOf(jTable1.getValueAt(fila, 5).toString()));
+            dto.setEstadoCrecimiento(EstadoCrecimiento.valueOf(jTable1.getValueAt(fila, 6).toString()));
+
+            // Abrir el formulario principal y cargar los datos
+            FrmCultivo form = new FrmCultivo(username, rol);
+            form.cargarDesdeTabla(dto);
+            form.setVisible(true);
+            this.dispose();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al abrir el registro: " + e.getMessage());
         }
-    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.

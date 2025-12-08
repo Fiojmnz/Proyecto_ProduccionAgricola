@@ -7,6 +7,7 @@ package Vista;
 import Controlador.UsuarioController;
 import javax.swing.JOptionPane;
 import Enum.Rol;
+import Seguridad.AdministradorAuntenticacion;
 import Modelo.UsuarioDTO;
 import Vista.FrmInicio;
 /**
@@ -21,6 +22,7 @@ private String username;
         this();
         this.username = username;
         this.rol = rol;
+        aplicarPermisos();
     }
     
     public FrmUsuario() {
@@ -40,6 +42,34 @@ private String username;
     jPasswordField1.setText(dto.getPassword()); 
         
     }
+    private void aplicarPermisos() {  
+    Rol rolActual = this.rol;
+    if (rolActual == Rol.TRABAJADOR) {
+
+     
+        btnAgregar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnBuscarUsername.setEnabled(false);
+        btnexisteUsername.setEnabled(false);
+
+   
+        btnVerTabla.setEnabled(true);
+        btnSalir.setEnabled(true);
+
+
+        jComboBox1.setEnabled(false);
+
+
+        jCheckBox1.setEnabled(false);
+        jCheckBox2.setEnabled(false);
+
+
+        jPasswordField1.setEnabled(false);
+
+
+        jTextField2.setEnabled(false);
+         }
+}
    
 
     /**
@@ -72,6 +102,8 @@ private String username;
         jCheckBox2 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(153, 255, 204));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(102, 102, 102));

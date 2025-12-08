@@ -24,93 +24,80 @@ private AlmacenamientoController controller;
     private String username;
     private Rol rol;
 
-  
     public FrmListaAlmacenamiento(String username, Rol rol) {
         this();
         this.username = username;
         this.rol = rol;
     }
 
-
     public FrmListaAlmacenamiento() {
         initComponents();
-        this.setLocationRelativeTo(null);
-        this.setTitle("Lista de Inventario de Almacenamiento");
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setTitle("Lista de Inventario de Almacenamiento");
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         try {
             controller = new AlmacenamientoController();
             cargarTablaAlmacenamiento();
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al conectar o cargar datos: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al conectar: " + ex.getMessage());
         }
 
-    
         jTable1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                if (evt.getClickCount() == 2) {
+                    int fila = jTable1.getSelectedRow();
+                    if (fila == -1) return;
+
+                    AlmacenamientoDTO dto = new AlmacenamientoDTO();
+
+                  
+                    dto.setId((Integer) jTable1.getValueAt(fila, 0));
+                    dto.setProducto((String) jTable1.getValueAt(fila, 1));
+                    dto.setCantidad(((Number) jTable1.getValueAt(fila, 2)).doubleValue()); // double
+                    dto.setFechaIngreso((java.sql.Date) jTable1.getValueAt(fila, 3));
+                    
+                    Object fechaEgresoObj = jTable1.getValueAt(fila, 4);
+                    dto.setFechaEgreso(fechaEgresoObj != null && !"Sin fecha".equals(fechaEgresoObj) ?
+                        (java.sql.Date) fechaEgresoObj : null);
+
+                    FrmAlmacenamiento form = new FrmAlmacenamiento(username, rol);
+                    form.cargarDesdeTabla(dto);
+                    form.setVisible(true);
+                    dispose();
+                }
             }
         });
     }
 
     private void cargarTablaAlmacenamiento() {
         try {
-       
             List<AlmacenamientoDTO> lista = controller.listarInventario();
 
             DefaultTableModel modelo = new DefaultTableModel();
             modelo.setColumnIdentifiers(new String[]{
-                "Id", "Producto", "Cantidad", "Fecha Ingreso", "Fecha Egreso"
+                "ID", "Producto", "Cantidad", "Fecha Ingreso", "Fecha Egreso"
             });
 
             for (AlmacenamientoDTO dto : lista) {
                 modelo.addRow(new Object[]{
                     dto.getId(),
                     dto.getProducto(),
-                    dto.getCantidad(),
+                    dto.getCantidad(), 
                     dto.getFechaIngreso(),
-                    dto.getFechaEgreso()
+                    dto.getFechaEgreso() != null ? dto.getFechaEgreso() : "Sin fecha"
                 });
             }
 
             jTable1.setModel(modelo);
+            jTable1.setRowHeight(30);
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al llenar la tabla: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al cargar: " + e.getMessage());
         }
-    }
 
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
-        if (evt.getClickCount() == 2) { 
-
-            int fila = jTable1.getSelectedRow();
-            if (fila == -1) return;
-
-            try {
-                DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-
-     
-                AlmacenamientoDTO dto = new AlmacenamientoDTO();
-                
-            
-            
-                dto.setId((Integer) modelo.getValueAt(fila, 0)); 
-                dto.setProducto((String) modelo.getValueAt(fila, 1));
-                dto.setCantidad((Integer) modelo.getValueAt(fila, 2));
-                dto.setFechaIngreso((java.sql.Date) modelo.getValueAt(fila, 3));
-                dto.setFechaEgreso((java.sql.Date) modelo.getValueAt(fila, 4));
-
-               
-                FrmAlmacenamiento formGestion = new FrmAlmacenamiento();
-                formGestion.cargarDesdeTabla(dto);
-                formGestion.setVisible(true);
-                this.dispose(); 
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Error al cargar el registro para edición: " + e.getMessage());
-            }
-        }
     }
     /**
      * This method is called from within the constructor to initialize the form.

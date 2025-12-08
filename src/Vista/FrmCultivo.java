@@ -28,6 +28,7 @@ public class FrmCultivo extends javax.swing.JFrame {
         this(); 
         this.username = username;
         this.rol = rol;
+        aplicarPermisos();
     }
 
 
@@ -81,11 +82,23 @@ private void limpiarCampos() {
    
 private java.sql.Date convertirFecha(String texto) throws Exception {
     java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-    sdf.setLenient(false); // Evita fechas inválidas tipo 2024-13-40
+    sdf.setLenient(false); 
     java.util.Date fecha = sdf.parse(texto);
     return new java.sql.Date(fecha.getTime());
 }
+private void aplicarPermisos() {  
+    Rol rolActual = this.rol;
 
+    if (rolActual == Rol.TRABAJADOR) {
+
+        btnGuardar.setEnabled(false);   
+        btnActualizar.setEnabled(false); 
+        btnEliminar.setEnabled(false);    
+
+    
+        btnVerTabla.setEnabled(true);
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -189,14 +202,14 @@ private java.sql.Date convertirFecha(String texto) throws Exception {
 
         cbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        txtFechaSiembra.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat(""))));
+        txtFechaSiembra.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd"))));
         txtFechaSiembra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtFechaSiembraActionPerformed(evt);
             }
         });
 
-        txtFechaCosecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
+        txtFechaCosecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd"))));
         txtFechaCosecha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtFechaCosechaActionPerformed(evt);
@@ -476,7 +489,9 @@ private java.sql.Date convertirFecha(String texto) throws Exception {
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnVerTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerTablaActionPerformed
-        new FrmListaCultivo().setVisible(true);
+        FrmListaCultivo ventana = new FrmListaCultivo(this.username, this.rol);
+        ventana.setLocationRelativeTo(null);
+        ventana.setVisible(true);
     }//GEN-LAST:event_btnVerTablaActionPerformed
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed

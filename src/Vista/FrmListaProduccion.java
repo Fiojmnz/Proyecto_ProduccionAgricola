@@ -3,20 +3,110 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
-
+import Controlador.ProduccionController;
+import Modelo.ProduccionDTO;
+import Enum.Rol;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 /**
  *
  * @author AsusVivobook
  */
 public class FrmListaProduccion extends javax.swing.JFrame {
+private ProduccionController controller;
+    private String username;
+    private Rol rol;
 
-    /**
-     * Creates new form FrmListaProduccion
-     */
-    public FrmListaProduccion() {
-        initComponents();
+    public FrmListaProduccion(String username, Rol rol) {
+        this();
+        this.username = username;
+        this.rol = rol;
     }
 
+    public FrmListaProduccion() {
+        initComponents();
+        setLocationRelativeTo(null);
+        setTitle("Lista General de Producción");
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+        try {
+            controller = new ProduccionController();
+            cargarTablaProduccion();  
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error de conexión: " + ex.getMessage());
+        }
+
+        
+        jTable1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    int fila = jTable1.getSelectedRow();
+                    if (fila != -1) {
+                        abrirEdicion(fila);
+                    }
+                }
+            }
+        });
+    }
+
+    private void cargarTablaProduccion() {
+        try {
+            List<ProduccionDTO> lista = controller.listarProduccion();
+
+            DefaultTableModel modelo = new DefaultTableModel();
+            modelo.setColumnIdentifiers(new String[]{
+                "ID", "Fecha", "Cultivo", "Cantidad", "Calidad", "Destino"
+            });
+
+            for (ProduccionDTO dto : lista) {
+              
+                String nombreCultivo = "Cultivo " + dto.getIdCultivo(); 
+               
+
+                modelo.addRow(new Object[]{
+                    dto.getId(),
+                    dto.getFecha(),
+                    nombreCultivo,
+                    dto.getCantidadRecolectada(),
+                    dto.getCalidad(),
+                    dto.getDestino()
+                });
+            }
+
+            jTable1.setModel(modelo);
+            jTable1.setRowHeight(28);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar tabla: " + e.getMessage());
+        }
+    }
+
+    private void abrirEdicion(int fila) {
+        try {
+            ProduccionDTO dto = new ProduccionDTO();
+            dto.setId((Integer) jTable1.getValueAt(fila, 0));
+            dto.setFecha(java.sql.Date.valueOf(jTable1.getValueAt(fila, 1).toString()));
+            dto.setCantidadRecolectada((Double) jTable1.getValueAt(fila, 3));
+            dto.setCalidad(jTable1.getValueAt(fila, 4).toString());
+            dto.setDestino(jTable1.getValueAt(fila, 5).toString());
+
+            FrmProduccion form = new FrmProduccion(username, rol);
+            form.cargarDesdeTabla(dto);
+            form.setVisible(true);
+            this.dispose();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al abrir edición: " + e.getMessage());
+        }
+    }
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
