@@ -11,6 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
+
+
 
 /**
  *
@@ -24,22 +27,49 @@ public class TrabajadorDAO {
         this.conn = conn;
     }
 
-    public boolean agregar(Trabajador t) {
-        String sql = "INSERT INTO trabajadores(cedula, nombre, telefono, correo, puesto, horario, salario) VALUES (?,?,?,?,?,?,?)";
+      public boolean agregar(Trabajador t) {
+
+
+        String sql = "INSERT INTO trabajadores(cedula, nombre, puesto, telefono, correo, horario, salario) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, t.getCedula());
             ps.setString(2, t.getNombre());
-            ps.setString(3, t.getTelefono());
-            ps.setString(4, t.getCorreo());
-            ps.setString(5, t.getPuesto());
+            ps.setString(3, t.getPuesto());
+            ps.setString(4, t.getTelefono());
+            ps.setString(5, t.getCorreo());
             ps.setString(6, t.getHorario());
             ps.setDouble(7, t.getSalario());
+
             ps.executeUpdate();
             return true;
+
         } catch (SQLException e) {
-            throw new RuntimeException("Error al agregar trabajador", e);
-        }
+
+            if (e.getMessage().contains("Duplicate")) {
+                JOptionPane.showMessageDialog(null,
+                    "Error: La cédula o correo ya está registrado.");
+            } else {
+                JOptionPane.showMessageDialog(null,
+                    "Error SQL: " + e.getMessage());
+            }
+
+            return false;
+}
+
+      }
+private void asignarTrabajadorAUsuario(String nombre, int trabajadorId) {
+    String sql = "UPDATE usuarios SET trabajador_id = ? WHERE username = ? AND (trabajador_id IS NULL OR trabajador_id = 0)";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, trabajadorId);
+        ps.setString(2, nombre);
+        ps.executeUpdate();
+    } catch (Exception e) {
+      
     }
+}
 
     public List<Trabajador> listar(String filtroPuesto) {
         List<Trabajador> list = new ArrayList<>();
